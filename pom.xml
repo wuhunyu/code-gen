@@ -7,10 +7,59 @@
     <groupId>com.wuhunyu</groupId>
     <artifactId>code-gen</artifactId>
     <version>0.9</version>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>2.7.2</version>
+    </parent>
+
+    <modules>
+        <module>code-gen-common</module>
+        <module>code-gen-framework</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+
+        <project.version>0.9</project.version>
+
+        <spring-boot.version>2.7.2</spring-boot.version>
+        <hutool.version>5.8.5</hutool.version>
+        <druid.version>1.2.11</druid.version>
+        <dynamic-datasource.version>3.5.1</dynamic-datasource.version>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- 工具类 -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-extra</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- druid连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!-- 动态数据源 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
+                <version>${dynamic-datasource.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
