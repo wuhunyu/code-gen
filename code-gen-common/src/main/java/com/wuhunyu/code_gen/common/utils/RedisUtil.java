@@ -1,11 +1,9 @@
-package com.wuhunyu.code_gen.framework.utils;
+package com.wuhunyu.code_gen.common.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.data.redis.core.ZSetOperations;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -14,7 +12,6 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +25,13 @@ import java.util.concurrent.TimeUnit;
  * @date 2022/8/13 14:52
  */
 
-public class RedisUtil {
+@Slf4j
+public final class RedisUtil {
+
+    /**
+     * RedisTemplate bean名称
+     */
+    private static final String REDIS_TEMPLATE_BEAN_NAME = "stringRedisTemplate";
 
     private RedisUtil() {
     }
@@ -40,23 +43,20 @@ public class RedisUtil {
     /**
      * 获取 RedisTemplate 对象
      *
-     * @param <K> 键类型
-     * @param <V> 值类型
      * @return RedisTemplate 对象
      */
     @SuppressWarnings("unchecked")
-    private static <K, V> RedisTemplate<K, V> getRedisTemplate() {
-        return SpringUtil.getBean(RedisTemplate.class);
+    private static StringRedisTemplate getRedisTemplate() {
+        return SpringUtil.getBean(REDIS_TEMPLATE_BEAN_NAME);
     }
 
     /**
      * 获取 string 操作对象
      *
-     * @param <V> 值类型
      * @return string 操作对象
      */
-    private static <V> ValueOperations<String, V> getValueOperations() {
-        RedisTemplate<String, V> redisTemplate = RedisUtil.getRedisTemplate();
+    private static ValueOperations<String, String> getValueOperations() {
+        StringRedisTemplate redisTemplate = RedisUtil.getRedisTemplate();
         return redisTemplate.opsForValue();
     }
 
@@ -68,18 +68,17 @@ public class RedisUtil {
      * @return hash 操作对象
      */
     private static <HK, HV> HashOperations<String, HK, HV> getHashOperations() {
-        RedisTemplate<String, ?> redisTemplate = RedisUtil.getRedisTemplate();
+        StringRedisTemplate redisTemplate = RedisUtil.getRedisTemplate();
         return redisTemplate.opsForHash();
     }
 
     /**
      * 获取 zset 操作对象
      *
-     * @param <V> 值类型
      * @return zset 操作对象
      */
-    private static <V> ZSetOperations<String, V> getZSetOperations() {
-        RedisTemplate<String, V> redisTemplate = RedisUtil.getRedisTemplate();
+    private static ZSetOperations<String, String> getZSetOperations() {
+        StringRedisTemplate redisTemplate = RedisUtil.getRedisTemplate();
         return redisTemplate.opsForZSet();
     }
 
@@ -92,10 +91,9 @@ public class RedisUtil {
      *
      * @param key   key
      * @param value value
-     * @param <V>   值类型
      */
-    public static <V> void set(String key, V value) {
-        ValueOperations<String, V> valueOperations = RedisUtil.getValueOperations();
+    public static void set(String key, String value) {
+        ValueOperations<String, String> valueOperations = RedisUtil.getValueOperations();
         valueOperations.set(key, value);
     }
 
@@ -106,11 +104,21 @@ public class RedisUtil {
      * @param value    value
      * @param expire   过期时长
      * @param timeUnit 时间单位
-     * @param <V>      值类型
      */
-    public static <V> void set(String key, V value, long expire, TimeUnit timeUnit) {
-        ValueOperations<String, V> valueOperations = RedisUtil.getValueOperations();
+    public static void set(String key, String value, long expire, TimeUnit timeUnit) {
+        ValueOperations<String, String> valueOperations = RedisUtil.getValueOperations();
         valueOperations.set(key, value, expire, timeUnit);
+    }
+
+    /**
+     * get
+     *
+     * @param key key
+     * @return 值
+     */
+    public static String get(String key) {
+        ValueOperations<String, String> valueOperations = RedisUtil.getValueOperations();
+        return valueOperations.get(key);
     }
 
     /**
@@ -119,11 +127,10 @@ public class RedisUtil {
      * @param key        key
      * @param expire     过期时长
      * @param chronoUnit 时间单位
-     * @param <T>        key类型
      * @return 设置过期时间是否成功
      */
-    public static <T> Boolean expire(T key, long expire, ChronoUnit chronoUnit) {
-        RedisTemplate<T, Object> redisTemplate = RedisUtil.getRedisTemplate();
+    public static Boolean expire(String key, long expire, ChronoUnit chronoUnit) {
+        StringRedisTemplate redisTemplate = RedisUtil.getRedisTemplate();
         return redisTemplate.expire(key, Duration.of(expire, chronoUnit));
     }
 
@@ -131,11 +138,10 @@ public class RedisUtil {
      * 判断是否存在某个key
      *
      * @param key key
-     * @param <T> key类型
      * @return 是否存在某个key(true : 存在 ; false : 不存在)
      */
-    public static <T> Boolean exists(T key) {
-        RedisTemplate<T, Object> redisTemplate = RedisUtil.getRedisTemplate();
+    public static Boolean exists(String key) {
+        StringRedisTemplate redisTemplate = RedisUtil.getRedisTemplate();
         return redisTemplate.hasKey(key);
     }
 
@@ -143,11 +149,10 @@ public class RedisUtil {
      * 删除某个key
      *
      * @param key key
-     * @param <T> key类型
      * @return 是否删除成功(true : 成功 ; false : 失败)
      */
-    public static <T> Boolean delete(T key) {
-        RedisTemplate<T, Object> redisTemplate = RedisUtil.getRedisTemplate();
+    public static Boolean delete(String key) {
+        StringRedisTemplate redisTemplate = RedisUtil.getRedisTemplate();
         return redisTemplate.delete(key);
     }
 
@@ -166,11 +171,20 @@ public class RedisUtil {
     public static <T> void hSet(String mapName, T data) throws IllegalAccessException {
         Class<?> dataClass = data.getClass();
         Field[] fields = dataClass.getDeclaredFields();
-        Map<String, Object> map = new HashMap<>(fields.length);
+        Map<String, String> map = new HashMap<>(fields.length);
         for (Field field : fields) {
             field.setAccessible(true);
             Object obj = field.get(data);
-            map.put(field.getName(), obj);
+            if (obj == null) {
+                continue;
+            }
+            // LocalDateTime
+            if (field.getType().isAssignableFrom(LocalDateTime.class)) {
+                LocalDateTime localDateTime = (LocalDateTime) obj;
+                map.put(field.getName(), LocalDateTimeUtil.formatLocalDateTime(localDateTime));
+                continue;
+            }
+            map.put(field.getName(), obj.toString());
         }
         if (CollUtil.isEmpty(map)) {
             return;
@@ -188,8 +202,16 @@ public class RedisUtil {
      * @param <V>     值类型
      */
     public static <V> void hSet(String mapName, String key, V value) {
-        HashOperations<String, String, V> hashOperations = RedisUtil.getHashOperations();
-        hashOperations.put(mapName, key, value);
+        if (value == null) {
+            return;
+        }
+        HashOperations<String, String, String> hashOperations = RedisUtil.getHashOperations();
+        if (value instanceof LocalDateTime) {
+            LocalDateTime localDateTime = (LocalDateTime) value;
+            hashOperations.put(mapName, key, LocalDateTimeUtil.formatLocalDateTime(localDateTime));
+            return;
+        }
+        hashOperations.put(mapName, key, value.toString());
     }
 
     /**
@@ -200,9 +222,13 @@ public class RedisUtil {
      * @param <V>     值类型
      * @return 属性值
      */
-    public static <V> V hGet(String mapName, String key) {
+    public static <V> V hGet(String mapName, String key, Class<V> vClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         HashOperations<String, String, V> hashOperations = RedisUtil.getHashOperations();
-        return hashOperations.get(mapName, key);
+        V v = hashOperations.get(mapName, key);
+        if (v == null) {
+            return null;
+        }
+        return RedisUtil.convertToT(v, vClass);
     }
 
     /**
@@ -216,11 +242,10 @@ public class RedisUtil {
      * @throws InvocationTargetException
      * @throws InstantiationException
      * @throws IllegalAccessException
-     * @throws NoSuchFieldException
      */
     public static <V> V hGetAll(String mapName, Class<V> vClass)
             throws NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException, NoSuchFieldException {
+            InstantiationException, IllegalAccessException {
         HashOperations<String, String, Object> hashOperations = RedisUtil.getHashOperations();
         Map<String, Object> map = hashOperations.entries(mapName);
         // 返回空
@@ -234,11 +259,46 @@ public class RedisUtil {
             if (entry.getValue() == null) {
                 continue;
             }
-            Field field = vClass.getDeclaredField(entry.getKey());
-            field.setAccessible(true);
-            field.set(instance, entry.getValue());
+            try {
+                Field field = vClass.getDeclaredField(entry.getKey());
+                field.setAccessible(true);
+                field.set(instance, RedisUtil.convertToT(entry.getValue(), field.getType()));
+            } catch (NoSuchFieldException e) {
+                log.warn("{} 字段不存在", entry.getKey());
+            }
         }
         return instance;
+    }
+
+    /**
+     * 强转原基础属性为指定类型
+     *
+     * @param source 原基础属性
+     * @param tClass 指定类型
+     * @param <T>    指定类型
+     * @return 指定类型的值
+     * @throws NoSuchMethodException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    private static <T> T convertToT(Object source, Class<T> tClass)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if (source == null) {
+            return null;
+        }
+        String str = source.toString();
+        if (tClass.isAssignableFrom(String.class)) {
+            // String
+            return tClass.cast(str);
+        } else if (tClass.isAssignableFrom(LocalDateTime.class)) {
+            // LocalDateTime
+            return tClass.cast(LocalDateTimeUtil.parseLocalDateTime(str));
+        }
+        // other
+        Method valueOf = tClass.getMethod("valueOf", String.class);
+        valueOf.setAccessible(true);
+        Object val = valueOf.invoke(null, str);
+        return tClass.cast(val);
     }
 
     /**
@@ -302,7 +362,7 @@ public class RedisUtil {
      * @param endTime   结束日期时间
      * @return 记录总数
      */
-    public static Long zRangeByScore(String zSetName, long startTime, long endTime) {
+    public static Long countZSetByScore(String zSetName, long startTime, long endTime) {
         ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
         return zSetOperations.count(zSetName, startTime, endTime);
     }
