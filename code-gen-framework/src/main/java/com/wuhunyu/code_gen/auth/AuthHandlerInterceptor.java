@@ -1,6 +1,5 @@
 package com.wuhunyu.code_gen.auth;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wuhunyu.code_gen.common.constants.CommonConstant;

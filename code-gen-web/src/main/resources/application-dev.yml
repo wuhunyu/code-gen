@@ -16,6 +16,21 @@ spring:
         max-wait: 2000
         min-idle: 1
 
+# 内置task线程池配置
+task-config:
+  # 是否启用线程池配置
+  enabled: true
+  # 核心线程数
+  core-num: 10
+  # 最大线程数
+  max-num: 15
+  # 线程空闲秒数
+  idle-second-num: 60
+  # 阻塞队列等待线程数
+  wait-num: 3
+  # 线程池名称前缀
+  task-name-prefix: "task-thread-"
+
 logging:
   file-path: /logs
   level:

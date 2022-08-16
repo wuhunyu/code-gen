@@ -1,0 +1,17 @@
+# 代码生成配置
+code-gen-config:
+  # 配置名称
+  config-name: "default"
+  # 需要去除的表前缀
+  table-prefix: ""
+  # 项目包名
+  project-package: "com.wuhunyu"
+  # 模块名
+  module-name: "code_gen"
+  # 子模块名
+  sub-module-name: "demo"
+  # 作者名称
+  author: "wuhunyu"
+  # 代码名称
+  version: "1.0"
+
