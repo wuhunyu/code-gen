@@ -29,7 +29,6 @@ public final class Assert {
      */
     public static void isTrue(boolean expression, String msg) {
         if (expression) {
-            log.info("主动异常: {}", msg);
             throw new BusinessException(msg);
         }
     }
@@ -40,7 +39,6 @@ public final class Assert {
      * @param msg 异常提示信息
      */
     public static void isTrue(String msg) {
-        log.info("主动异常: {}", msg);
         throw new BusinessException(msg);
     }
 
@@ -57,7 +55,6 @@ public final class Assert {
                                                            Class<T> runtimeExceptionClass) {
         if (expression) {
             try {
-                log.info("主动异常: {}", msg);
                 Constructor<T> constructor = runtimeExceptionClass.getDeclaredConstructor(String.class);
                 constructor.setAccessible(true);
                 throw constructor.newInstance(msg);

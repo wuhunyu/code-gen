@@ -51,4 +51,12 @@ public interface UserService {
      */
     UserVo findUserVoByUserId(Long userId);
 
+    /**
+     * 判断当前用户是否存在
+     *
+     * @param userId 用户id
+     * @return 是否存在(true : 存在 ; false : 不存在)
+     */
+    boolean existsUserByUserId(Long userId);
+
 }

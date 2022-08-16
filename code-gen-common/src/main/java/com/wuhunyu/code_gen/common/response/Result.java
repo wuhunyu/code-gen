@@ -39,6 +39,19 @@ public final class Result<T> implements Serializable {
     }
 
     /**
+     * 自定义返回
+     *
+     * @param code 响应码
+     * @param msg  响应消息
+     * @param data 响应数据
+     * @param <T>  响应泛型
+     * @return 自定义返回
+     */
+    public static <T> Result<T> self(Integer code, String msg, T data) {
+        return new Result<>(code, msg, data);
+    }
+
+    /**
      * 成功
      *
      * @param <T> 响应泛型
@@ -56,7 +69,7 @@ public final class Result<T> implements Serializable {
      * @return ok
      */
     public static <T> Result<T> ok(T data) {
-        return new Result<T>(
+        return new Result<>(
                 ResponseCodeEnum.OK.getCode(),
                 ResponseCodeEnum.OK.getDefaultMsg(),
                 data);
@@ -92,7 +105,7 @@ public final class Result<T> implements Serializable {
      * @return error
      */
     public static <T> Result<T> error(String msg) {
-        return new Result<T>(
+        return new Result<>(
                 ResponseCodeEnum.SERVER_ERROR.getCode(),
                 msg,
                 null);

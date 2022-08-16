@@ -38,13 +38,12 @@ public class UserDto {
     /**
      * 昵称
      */
-    @NotBlank(message = "昵称不能为空")
     private String nickName;
 
     /**
      * 登录密码
      */
-    @NotBlank(message = "登录密码不能为空")
+    @NotBlank(message = "登录密码不能为空", groups = OperationTypeGroup.Insert.class)
     private String password;
 
 }

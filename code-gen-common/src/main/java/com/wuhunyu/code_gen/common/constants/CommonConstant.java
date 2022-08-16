@@ -23,4 +23,14 @@ public final class CommonConstant {
      */
     public static final String BLANK_STR = "";
 
+    /**
+     * 无权限访问 code
+     */
+    public static final int NO_AUTH_CODE = 502;
+
+    /**
+     * 无权限访问 msg
+     */
+    public static final String NO_AUTH_MSG = "无权限访问";
+
 }

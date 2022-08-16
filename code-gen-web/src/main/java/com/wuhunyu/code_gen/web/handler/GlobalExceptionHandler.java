@@ -4,6 +4,7 @@ import com.wuhunyu.code_gen.common.constants.CommonConstant;
 import com.wuhunyu.code_gen.common.exception.BusinessException;
 import com.wuhunyu.code_gen.common.response.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,16 +34,24 @@ public class GlobalExceptionHandler {
         return Result.error(e.getMsg());
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Result<String> httpMessageNotReadableExceptionListener(HttpMessageNotReadableException e) {
+        log.info("消息接收异常: {}", e.getLocalizedMessage(), e);
+        return Result.error("请求消息缺失");
+    }
+
     @ExceptionHandler(BindException.class)
+    @SuppressWarnings("all")
     public Result<String> bindExceptionListener(BindException e) {
-        String defaultMessage = e.getAllErrors().get(0).getDefaultMessage();
+        String defaultMessage = e.getBindingResult().getFieldError().getDefaultMessage();
         log.info("参数校验异常: {}", defaultMessage);
         return Result.error(defaultMessage);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @SuppressWarnings("all")
     public Result<String> methodArgumentNotValidExceptionListener(MethodArgumentNotValidException e) {
-        String defaultMessage = e.getAllErrors().get(0).getDefaultMessage();
+        String defaultMessage = e.getBindingResult().getFieldError().getDefaultMessage();
         log.info("参数校验异常: {}", defaultMessage);
         return Result.error(defaultMessage);
     }

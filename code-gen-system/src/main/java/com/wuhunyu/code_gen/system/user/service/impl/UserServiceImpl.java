@@ -108,4 +108,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findUserByUserId(userId);
         return User.convertUserToUserVo(user);
     }
+
+    @Override
+    public boolean existsUserByUserId(Long userId) {
+        return userId != null &&
+                userRepository.findUserByUserId(userId) != null;
+    }
 }
