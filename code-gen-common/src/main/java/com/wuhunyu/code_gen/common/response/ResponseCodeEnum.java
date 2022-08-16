@@ -1,5 +1,7 @@
 package com.wuhunyu.code_gen.common.response;
 
+import com.wuhunyu.code_gen.common.constants.CommonConstant;
+
 /**
  * 响应码枚举
  *
@@ -23,7 +25,7 @@ public enum ResponseCodeEnum {
     /**
      * 服务器异常
      */
-    SERVER_ERROR(500, "server error");
+    SERVER_ERROR(500, CommonConstant.DEFAULT_EXCEPTION_MSG);
 
     private final int code;
 

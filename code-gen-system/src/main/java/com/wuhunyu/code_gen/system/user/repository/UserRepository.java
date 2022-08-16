@@ -13,6 +13,22 @@ import com.wuhunyu.code_gen.system.user.domain.User;
 public interface UserRepository {
 
     /**
+     * 根据userId查询用户信息
+     *
+     * @param userId userId
+     * @return 用户信息
+     */
+    User findUserByUserId(Long userId);
+
+    /**
+     * 根据 登录用户名称 查询用户信息
+     *
+     * @param loginName 登录用户名称
+     * @return 用户信息
+     */
+    User findUserByLoginName(String loginName);
+
+    /**
      * 新增
      *
      * @param user 用户信息

@@ -17,13 +17,14 @@
 
     <modules>
         <module>code-gen-common</module>
-        <module>code-gen-framework</module>
         <module>code-gen-system</module>
+        <module>code-gen-framework</module>
+        <module>code-gen-web</module>
     </modules>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <project.version>0.9</project.version>
 
@@ -45,6 +46,11 @@
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-extra</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-crypto</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
 

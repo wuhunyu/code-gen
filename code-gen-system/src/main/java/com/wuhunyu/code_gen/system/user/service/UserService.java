@@ -38,14 +38,17 @@ public interface UserService {
 
     /**
      * 删除当前用户(完全注销)
+     *
+     * @param userId 用户id
      */
-    void deleteCurUser();
+    void deleteUserByUserId(Long userId);
 
     /**
      * 查询当前用户信息
      *
+     * @param userId 用户id
      * @return 当前用户信息
      */
-    UserVo findUserCurVo();
+    UserVo findUserVoByUserId(Long userId);
 
 }

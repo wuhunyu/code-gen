@@ -12,22 +12,22 @@ import javax.validation.groups.Default;
 
 public interface OperationTypeGroup extends Default {
 
-    public interface Select {
+    public interface Select extends OperationTypeGroup {
     }
 
-    public interface Insert {
+    public interface Insert extends OperationTypeGroup {
     }
 
-    public interface Update {
+    public interface Update extends OperationTypeGroup {
     }
 
-    public interface Delete {
+    public interface Delete extends OperationTypeGroup {
     }
 
-    public interface Export {
+    public interface Export extends OperationTypeGroup {
     }
 
-    public interface Other {
+    public interface Other extends OperationTypeGroup {
     }
 
 }

@@ -8,19 +8,19 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 /**
- * redis启动测试类
+ * 代码生成器主启动类
  *
  * @author wuhunyu
  * @version 1.0
- * @date 2022/8/15 10:33
+ * @date 2022/8/15 21:06
  */
 
-@Import(SpringUtil.class)
+@Import({SpringUtil.class})
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DruidDataSourceAutoConfigure.class})
-public class RedisApplication {
+public class CodeGenApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RedisApplication.class, args);
+        SpringApplication.run(CodeGenApplication.class, args);
     }
 
 }

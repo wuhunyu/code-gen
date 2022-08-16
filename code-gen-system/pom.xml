@@ -11,11 +11,6 @@
 
     <artifactId>code-gen-system</artifactId>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-
     <dependencies>
         <!-- common模块 -->
         <dependency>

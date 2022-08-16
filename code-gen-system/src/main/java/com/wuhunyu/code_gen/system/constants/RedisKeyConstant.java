@@ -31,12 +31,12 @@ public final class RedisKeyConstant {
         /**
          * 用户信息
          */
-        public static final String USER_MAP = PREFIX + "userMap";
+        public static final String USER_MAP = PREFIX + "userMap:";
 
         /**
          * 用户登录名称信息
          */
-        public static final String LOGIN_USER_NAME_MAP = PREFIX + "loginUserNameMap";
+        public static final String LOGIN_NAME_MAP = PREFIX + "loginNameMap";
 
     }
 

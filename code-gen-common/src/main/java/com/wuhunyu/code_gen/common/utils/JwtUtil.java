@@ -42,6 +42,7 @@ public final class JwtUtil {
         }
         return JWT.create()
                 .withClaim(USER_ID_STR, userId)
+                .withIssuer(String.valueOf(System.currentTimeMillis()))
                 .sign(Algorithm.HMAC256(SECRET));
     }
 
