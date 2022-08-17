@@ -33,4 +33,9 @@ public final class CommonConstant {
      */
     public static final String NO_AUTH_MSG = "无权限访问";
 
+    /**
+     * 英文校验正则表达式
+     */
+    public static final String ENGLISH_CHAR_STR_REGEXP = "^[a-zA-Z_-]{1,120}$";
+
 }

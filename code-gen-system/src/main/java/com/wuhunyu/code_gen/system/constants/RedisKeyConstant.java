@@ -40,4 +40,26 @@ public final class RedisKeyConstant {
 
     }
 
+    /**
+     * 环境keys
+     */
+    public final static class UserEnvironmentKeys {
+
+        private UserEnvironmentKeys() {
+        }
+
+        public static final String PREFIX = RedisKeyConstant.PREFIX + "userEnvironment:";
+
+        /**
+         * 环境信息
+         */
+        public static final String USER_ENVIRONMENT_MAP = PREFIX + "userEnvironmentMap:";
+
+        /**
+         * 用户 环境关系
+         */
+        public static final String USER_ENVIRONMENT_SET = PREFIX + "userEnvironmentSet:";
+
+    }
+
 }

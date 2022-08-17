@@ -316,35 +316,48 @@ public final class RedisUtil {
     }
 
     /**
-     * =================================================zset 操作方法====================================================
+     * =================================================zSet 操作方法====================================================
      */
 
     /**
-     * 新增 zset 值
+     * 新增 zSet 值
      *
-     * @param zSetName zset名称
+     * @param zSetName zSet名称
      * @param key      存入key名称
      */
-    public static void sAdd(String zSetName, String key) {
+    public static void zAdd(String zSetName, String key) {
         ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
         zSetOperations.add(zSetName, key, System.currentTimeMillis());
     }
 
     /**
-     * 移除 zset 中的某个key
+     * 移除 zSet 中的某个key
      *
-     * @param zSetName zset名称
-     * @param key      存入key名称
+     * @param zSetName zSet名称
+     * @param key      待移除key名称
      */
-    public static void sRemove(String zSetName, String key) {
+    public static void zRemove(String zSetName, String key) {
         ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
         zSetOperations.remove(zSetName, key);
     }
 
     /**
+     * 判断一个元素是否存在于 zSet 中
+     *
+     * @param zSetName zSet名称
+     * @param key      key名称
+     * @return 是否存在(true : 存在 ; false : 不存在)
+     */
+    public static boolean zExists(String zSetName, String key) {
+        ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
+        Long rank = zSetOperations.rank(zSetName, key);
+        return rank != null;
+    }
+
+    /**
      * 分页查询
      *
-     * @param zSetName  zset名称
+     * @param zSetName  zSet名称
      * @param startTime 开始日期时间
      * @param endTime   结束日期时间
      * @param startPage 起始索引
@@ -358,9 +371,20 @@ public final class RedisUtil {
     }
 
     /**
+     * 查询全部
+     *
+     * @param zSetName zSet名称
+     * @return 查询结果
+     */
+    public static Set<String> zRange(String zSetName) {
+        ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
+        return zSetOperations.range(zSetName, 0L, -1L);
+    }
+
+    /**
      * 统计记录总数
      *
-     * @param zSetName  zset名称
+     * @param zSetName  zSet名称
      * @param startTime 开始日期时间
      * @param endTime   结束日期时间
      * @return 记录总数
@@ -368,6 +392,17 @@ public final class RedisUtil {
     public static Long countZSetByScore(String zSetName, long startTime, long endTime) {
         ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
         return zSetOperations.count(zSetName, startTime, endTime);
+    }
+
+    /**
+     * 统计记录总数
+     *
+     * @param zSetName zSet名称
+     * @return 记录总数
+     */
+    public static Long countZSetByScore(String zSetName) {
+        ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
+        return zSetOperations.count(zSetName, 0D, -1D);
     }
 
 }
