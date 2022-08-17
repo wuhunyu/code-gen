@@ -71,4 +71,13 @@ public interface UserEnvironmentRepository {
      */
     void sortUserEnvironments(List<Long> userEnvironmentIds, Long userId);
 
+
+    /**
+     * 统计指定用户下的环境个数
+     *
+     * @param userId 用户id
+     * @return 环境个数
+     */
+    Long countUserEnvironmentNumByUserId(Long userId);
+
 }

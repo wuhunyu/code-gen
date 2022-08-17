@@ -331,6 +331,18 @@ public final class RedisUtil {
     }
 
     /**
+     * 新增 zSet 值
+     *
+     * @param zSetName zSet名称
+     * @param key      存入key名称
+     * @param score    分数
+     */
+    public static void zAdd(String zSetName, String key, double score) {
+        ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
+        zSetOperations.add(zSetName, key, score);
+    }
+
+    /**
      * 移除 zSet 中的某个key
      *
      * @param zSetName zSet名称

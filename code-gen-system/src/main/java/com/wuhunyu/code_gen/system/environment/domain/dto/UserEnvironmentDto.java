@@ -2,7 +2,9 @@ package com.wuhunyu.code_gen.system.environment.domain.dto;
 
 import com.wuhunyu.code_gen.common.constants.CommonConstant;
 import com.wuhunyu.code_gen.system.operation_type.OperationTypeGroup;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,6 +19,8 @@ import javax.validation.constraints.Pattern;
  */
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserEnvironmentDto {
 
     /**

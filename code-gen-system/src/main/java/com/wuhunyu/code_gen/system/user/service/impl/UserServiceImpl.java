@@ -4,6 +4,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.wuhunyu.code_gen.common.sequence.SequenceInstance;
 import com.wuhunyu.code_gen.common.utils.Assert;
 import com.wuhunyu.code_gen.common.utils.JwtUtil;
+import com.wuhunyu.code_gen.system.listener.UserCreateListener;
 import com.wuhunyu.code_gen.system.user.domain.User;
 import com.wuhunyu.code_gen.system.user.domain.dto.UserDto;
 import com.wuhunyu.code_gen.system.user.domain.vo.UserVo;
@@ -12,6 +13,7 @@ import com.wuhunyu.code_gen.system.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,8 @@ import java.util.Objects;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final ApplicationEventPublisher publisher;
 
     @Override
     public String login(UserDto userDto) {
@@ -69,7 +73,12 @@ public class UserServiceImpl implements UserService {
         // 新增用户
         userRepository.insertUser(user);
         // 返回登录凭证
-        return JwtUtil.createToken(userId);
+        String token = JwtUtil.createToken(userId);
+
+        // 异步通知初始化 用户信息
+        publisher.publishEvent(new UserCreateListener.UserCreateDto(userId));
+
+        return token;
     }
 
     @Override

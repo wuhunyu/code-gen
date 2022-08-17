@@ -112,11 +112,26 @@ public class UserEnvironmentRepositoryImpl implements UserEnvironmentRepository 
     @Override
     public boolean existsUserEnvironmentByUserEnvironmentIdAndUserId(Long userEnvironmentId, Long userId) {
         String userEnvironmentSetKey = USER_ENVIRONMENT_SET + userId;
-        return zExists(userEnvironmentSetKey, userId.toString());
+        return zExists(userEnvironmentSetKey, userEnvironmentId.toString());
     }
 
     @Override
     public void sortUserEnvironments(List<Long> userEnvironmentIds, Long userId) {
+        // 删除现在的 用户 环境 映射关系
+        String userEnvironmentSetKey = USER_ENVIRONMENT_SET + userId;
+        delete(userEnvironmentSetKey);
 
+        // 新增 用户 环境 映射关系
+        long currentTimeMillis = System.currentTimeMillis();
+        for (Long userEnvironmentId : userEnvironmentIds) {
+            zAdd(userEnvironmentSetKey, userEnvironmentId.toString(), currentTimeMillis++);
+        }
+    }
+
+    @Override
+    public Long countUserEnvironmentNumByUserId(Long userId) {
+        // 统计指定的 用户 环境 映射关系 个数
+        String userEnvironmentSetKey = USER_ENVIRONMENT_SET + userId;
+        return countZSetByScore(userEnvironmentSetKey);
     }
 }

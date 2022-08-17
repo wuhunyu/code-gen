@@ -1,4 +1,4 @@
-package com.wuhunyu.code_gen.system.environment;
+package com.wuhunyu.code_gen.system.environment.service;
 
 import com.wuhunyu.code_gen.common.domain.SelectData;
 import com.wuhunyu.code_gen.system.environment.domain.dto.UserEnvironmentDto;
@@ -29,6 +29,15 @@ public interface UserEnvironmentService {
      * @return 环境配置
      */
     List<SelectData> listUserEnvironmentsByUserId(Long userId);
+
+    /**
+     * 查询环境配置信息
+     *
+     * @param userEnvironmentId 环境配置id
+     * @param userId            用户id
+     * @return 环境配置Dto
+     */
+    UserEnvironmentDto findUserEnvironmentDtoByUserEnvironmentId(Long userEnvironmentId, Long userId);
 
     /**
      * 新增一个环境

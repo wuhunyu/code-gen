@@ -1,5 +1,6 @@
 package com.wuhunyu.code_gen.system.listener;
 
+import com.wuhunyu.code_gen.system.environment.service.UserEnvironmentService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +33,18 @@ public class UserCreateListener {
 
     }
 
+    private final UserEnvironmentService userEnvironmentService;
+
+    /**
+     * 初始化用户信息
+     *
+     * @param userCreateDto userId
+     */
     @Async
     @EventListener(UserCreateDto.class)
     public void initUser(UserCreateDto userCreateDto) {
-
+        // 初始化用户环境配置
+        userEnvironmentService.initUserEnvironment(userCreateDto.getUserId());
     }
 
 }
