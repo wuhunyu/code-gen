@@ -21,7 +21,7 @@ public final class RedisKeyConstant {
     /**
      * 用户key
      */
-    public final static class UserKeys {
+    public static final class UserKeys {
 
         private UserKeys() {
         }
@@ -43,7 +43,7 @@ public final class RedisKeyConstant {
     /**
      * 环境keys
      */
-    public final static class UserEnvironmentKeys {
+    public static final class UserEnvironmentKeys {
 
         private UserEnvironmentKeys() {
         }
@@ -62,4 +62,25 @@ public final class RedisKeyConstant {
 
     }
 
+    /**
+     * 基类keys
+     */
+    public static final class BaseClassKeys {
+
+        private BaseClassKeys() {
+        }
+
+        public static final String PREFIX = RedisKeyConstant.PREFIX + "baseClass:";
+
+        /**
+         * 基类配置信息
+         */
+        public static final String BASE_CLASS_MAP = PREFIX + "baseClassMap:";
+
+        /**
+         * 用户 基类关系
+         */
+        public static final String BASE_CLASS_SET = PREFIX + "baseClassSet:";
+
+    }
 }

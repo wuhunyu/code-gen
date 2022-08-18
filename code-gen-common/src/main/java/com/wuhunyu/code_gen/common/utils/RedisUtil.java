@@ -2,6 +2,7 @@ package com.wuhunyu.code_gen.common.utils;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.wuhunyu.code_gen.common.constants.CommonConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -48,7 +49,6 @@ public final class RedisUtil {
      *
      * @return RedisTemplate 对象
      */
-    @SuppressWarnings("unchecked")
     private static StringRedisTemplate getRedisTemplate() {
         return SpringUtil.getBean(REDIS_TEMPLATE_BEAN_NAME);
     }
@@ -169,25 +169,29 @@ public final class RedisUtil {
      * @param mapName hash名称
      * @param data    存入对象
      * @param <T>     值类型
-     * @throws IllegalAccessException 反射操作异常
      */
-    public static <T> void hSet(String mapName, T data) throws IllegalAccessException {
+    public static <T> void hSet(String mapName, T data) {
         Class<?> dataClass = data.getClass();
         Field[] fields = dataClass.getDeclaredFields();
         Map<String, String> map = new HashMap<>(fields.length);
-        for (Field field : fields) {
-            field.setAccessible(true);
-            Object obj = field.get(data);
-            if (obj == null) {
-                continue;
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object obj = field.get(data);
+                if (obj == null) {
+                    continue;
+                }
+                // LocalDateTime
+                if (field.getType().isAssignableFrom(LocalDateTime.class)) {
+                    LocalDateTime localDateTime = (LocalDateTime) obj;
+                    map.put(field.getName(), LocalDateTimeUtil.formatLocalDateTime(localDateTime));
+                    continue;
+                }
+                map.put(field.getName(), obj.toString());
             }
-            // LocalDateTime
-            if (field.getType().isAssignableFrom(LocalDateTime.class)) {
-                LocalDateTime localDateTime = (LocalDateTime) obj;
-                map.put(field.getName(), LocalDateTimeUtil.formatLocalDateTime(localDateTime));
-                continue;
-            }
-            map.put(field.getName(), obj.toString());
+        } catch (IllegalAccessException e) {
+            log.error("反射异常: {}", e.getLocalizedMessage(), e);
+            throw new RuntimeException(CommonConstant.DEFAULT_EXCEPTION_MSG);
         }
         if (CollUtil.isEmpty(map)) {
             return;
@@ -225,13 +229,18 @@ public final class RedisUtil {
      * @param <V>     值类型
      * @return 属性值
      */
-    public static <V> V hGet(String mapName, String key, Class<V> vClass) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static <V> V hGet(String mapName, String key, Class<V> vClass) {
         HashOperations<String, String, V> hashOperations = RedisUtil.getHashOperations();
-        V v = hashOperations.get(mapName, key);
-        if (v == null) {
-            return null;
+        try {
+            V v = hashOperations.get(mapName, key);
+            if (v == null) {
+                return null;
+            }
+            return RedisUtil.convertToT(v, vClass);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            log.error("反射异常: {}", e.getLocalizedMessage(), e);
+            throw new RuntimeException(CommonConstant.DEFAULT_EXCEPTION_MSG);
         }
-        return RedisUtil.convertToT(v, vClass);
     }
 
     /**
@@ -241,36 +250,35 @@ public final class RedisUtil {
      * @param vClass  值类型
      * @param <V>     普通bean对象类型
      * @return 普通bean对象
-     * @throws NoSuchMethodException
-     * @throws InvocationTargetException
-     * @throws InstantiationException
-     * @throws IllegalAccessException
      */
-    public static <V> V hGetAll(String mapName, Class<V> vClass)
-            throws NoSuchMethodException, InvocationTargetException,
-            InstantiationException, IllegalAccessException {
+    public static <V> V hGetAll(String mapName, Class<V> vClass) {
         HashOperations<String, String, Object> hashOperations = RedisUtil.getHashOperations();
         Map<String, Object> map = hashOperations.entries(mapName);
         // 返回空
         if (CollUtil.isEmpty(map)) {
             return null;
         }
-        // 获取无参构造
-        Constructor<V> nullParamsConstructor = vClass.getDeclaredConstructor();
-        V instance = nullParamsConstructor.newInstance();
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() == null) {
-                continue;
+        try {
+            // 获取无参构造
+            Constructor<V> nullParamsConstructor = vClass.getDeclaredConstructor();
+            V instance = nullParamsConstructor.newInstance();
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getValue() == null) {
+                    continue;
+                }
+                try {
+                    Field field = vClass.getDeclaredField(entry.getKey());
+                    field.setAccessible(true);
+                    field.set(instance, RedisUtil.convertToT(entry.getValue(), field.getType()));
+                } catch (NoSuchFieldException e) {
+                    log.warn("{} 字段不存在", entry.getKey());
+                }
             }
-            try {
-                Field field = vClass.getDeclaredField(entry.getKey());
-                field.setAccessible(true);
-                field.set(instance, RedisUtil.convertToT(entry.getValue(), field.getType()));
-            } catch (NoSuchFieldException e) {
-                log.warn("{} 字段不存在", entry.getKey());
-            }
+            return instance;
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+            log.error("反射异常: {}", e.getLocalizedMessage(), e);
+            throw new RuntimeException(CommonConstant.DEFAULT_EXCEPTION_MSG);
         }
-        return instance;
     }
 
     /**
@@ -412,9 +420,10 @@ public final class RedisUtil {
      * @param zSetName zSet名称
      * @return 记录总数
      */
-    public static Long countZSetByScore(String zSetName) {
+    public static Long countZSet(String zSetName) {
         ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
-        return zSetOperations.count(zSetName, 0D, -1D);
+        Long count = zSetOperations.count(zSetName, 0D, -1D);
+        return count == null ? 0L : count;
     }
 
 }

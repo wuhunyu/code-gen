@@ -1,4 +1,4 @@
-package com.wuhunyu.code_gen.system.environment.service;
+package com.wuhunyu.code_gen.system.environment.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.wuhunyu.code_gen.common.constants.CommonConstant;
@@ -9,6 +9,7 @@ import com.wuhunyu.code_gen.system.environment.domain.UserEnvironment;
 import com.wuhunyu.code_gen.system.environment.domain.dto.UserEnvironmentDto;
 import com.wuhunyu.code_gen.system.environment.model.CodeGenConfigModel;
 import com.wuhunyu.code_gen.system.environment.repository.UserEnvironmentRepository;
+import com.wuhunyu.code_gen.system.environment.service.UserEnvironmentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
