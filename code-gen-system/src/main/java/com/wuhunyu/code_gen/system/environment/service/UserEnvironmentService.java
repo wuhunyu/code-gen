@@ -2,6 +2,7 @@ package com.wuhunyu.code_gen.system.environment.service;
 
 import com.wuhunyu.code_gen.common.domain.SelectData;
 import com.wuhunyu.code_gen.system.environment.domain.dto.UserEnvironmentDto;
+import com.wuhunyu.code_gen.system.environment.domain.vo.UserEnvironmentVo;
 
 import java.util.List;
 
@@ -38,6 +39,15 @@ public interface UserEnvironmentService {
      * @return 环境配置Dto
      */
     UserEnvironmentDto findUserEnvironmentDtoByUserEnvironmentId(Long userEnvironmentId, Long userId);
+
+    /**
+     * 查询环境配置信息
+     *
+     * @param userEnvironmentId 环境配置id
+     * @param userId            用户id
+     * @return 环境配置Dto
+     */
+    UserEnvironmentVo findUserEnvironmentVoByUserEnvironmentId(Long userEnvironmentId, Long userId);
 
     /**
      * 新增一个环境

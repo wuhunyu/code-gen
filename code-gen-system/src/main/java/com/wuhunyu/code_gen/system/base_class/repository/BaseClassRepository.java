@@ -53,7 +53,7 @@ public interface BaseClassRepository {
      * @param baseClassId 基类配置id
      * @param userId      用户id
      */
-    void deleteBaseClassByBaseClassId(Long baseClassId, Long userId);
+    void deleteBaseClassByBaseClassIdAndUserId(Long baseClassId, Long userId);
 
     /**
      * 查询指定用户下的基类配置数量
@@ -62,5 +62,14 @@ public interface BaseClassRepository {
      * @return 指定用户下的基类配置数量
      */
     Long countBaseClassNumByUserId(Long userId);
+
+    /**
+     * 判定基类配置是否存在于指定用户名下
+     *
+     * @param baseClassId 基类id
+     * @param userId      用户id
+     * @return 是否存在(true : 存在 ; false : 不存在)
+     */
+    boolean existBaseClass(Long baseClassId, Long userId);
 
 }

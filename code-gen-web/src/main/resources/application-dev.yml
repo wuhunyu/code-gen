@@ -6,7 +6,7 @@ spring:
   redis:
     database: 0
     host: 106.52.80.63
-    port: 6379
+    port: 6380
     password: ""
     timeout: 2000
     lettuce:
@@ -32,6 +32,8 @@ task-config:
   task-name-prefix: "task-thread-"
 
 logging:
+  # 开启接口请求日志打印
+  requestAspect: true
   file-path: /logs
   level:
     com:

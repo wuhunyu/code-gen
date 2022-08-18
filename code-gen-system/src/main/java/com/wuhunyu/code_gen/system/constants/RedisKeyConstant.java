@@ -83,4 +83,27 @@ public final class RedisKeyConstant {
         public static final String BASE_CLASS_SET = PREFIX + "baseClassSet:";
 
     }
+
+    /**
+     * 类型映射
+     */
+    public static final class ClassTypeKeys {
+
+        private ClassTypeKeys() {
+        }
+
+        public static final String PREFIX = RedisKeyConstant.PREFIX + "classType:";
+
+        /**
+         * 类型映射信息
+         */
+        public static final String CLASS_TYPE_MAP = "classTypeMap:";
+
+        /**
+         * 类型映射 环境 关系
+         */
+        public static final String CLASS_TYPE_SET = "classTypeSet:";
+
+    }
+
 }

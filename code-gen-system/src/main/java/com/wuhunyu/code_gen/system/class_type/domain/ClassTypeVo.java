@@ -1,4 +1,4 @@
-package com.wuhunyu.code_gen.system.base_class.domain.dto;
+package com.wuhunyu.code_gen.system.class_type.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -7,37 +7,37 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 基类Vo
+ * 类型映射Vo
  *
  * @author wuhunyu
  * @version 1.0
- * @date 2022/8/18 11:32
+ * @date 2022/8/18 18:23
  */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseClassVo {
+public class ClassTypeVo {
 
     /**
-     * 基类id
+     * 类型映射id
      */
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long baseClassId;
+    private Long classTypeId;
 
     /**
-     * 基类名称
+     * 数据库类型
      */
-    private String baseClassName;
+    private String jdbcType;
 
     /**
-     * 基类包名
+     * java类型所在包名
      */
-    private String packageName;
+    private String javaTypePackage;
 
     /**
-     * 基类类名
+     * java类型名称
      */
-    private String className;
+    private String javaTypeName;
 
 }

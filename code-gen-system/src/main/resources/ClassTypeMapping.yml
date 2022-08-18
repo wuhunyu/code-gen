@@ -1,0 +1,45 @@
+# 基本类型对应关系
+class-type-mapping:
+  # 不需要手动导入的包
+  default-java-package: "java.lang"
+  # 默认对应关系
+  default-list:
+    # varchar <> java.lang.String
+    - jdbc-type: "varchar"
+      java-type-package: "java.lang"
+      java-type-name: "String"
+
+    # char <> java.lang.String
+    - jdbc-type: "char"
+      java-type-package: "java.lang"
+      java-type-name: "String"
+
+    # bigint <> java.lang.Long
+    - jdbc-type: "bigint"
+      java-type-package: "java.lang"
+      java-type-name: "Long"
+
+    # int <> java.lang.Integer
+    - jdbc-type: "int"
+      java-type-package: "java.lang"
+      java-type-name: "Integer"
+
+    # smallint <> java.lang.Integer
+    - jdbc-type: "smallint"
+      java-type-package: "java.lang"
+      java-type-name: "Integer"
+
+    # tinyint <> java.lang.Integer
+    - jdbc-type: "tinyint"
+      java-type-package: "java.lang"
+      java-type-name: "Integer"
+
+    # datetime <> java.time.LocalDateTime
+    - jdbc-type: "datetime"
+      java-type-package: "java.time"
+      java-type-name: "LocalDateTime"
+
+    # decimal <> java.math.BigDecimal
+    - jdbc-type: "decimal"
+      java-type-package: "java.math"
+      java-type-name: "BigDecimal"

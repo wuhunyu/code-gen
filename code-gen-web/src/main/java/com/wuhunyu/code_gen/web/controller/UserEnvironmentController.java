@@ -5,6 +5,7 @@ import com.wuhunyu.code_gen.auth.AuthContextHolder;
 import com.wuhunyu.code_gen.common.domain.SelectData;
 import com.wuhunyu.code_gen.common.utils.Assert;
 import com.wuhunyu.code_gen.system.environment.domain.dto.UserEnvironmentDto;
+import com.wuhunyu.code_gen.system.environment.domain.vo.UserEnvironmentVo;
 import com.wuhunyu.code_gen.system.environment.service.UserEnvironmentService;
 import com.wuhunyu.code_gen.system.operation_type.OperationTypeGroup;
 import lombok.RequiredArgsConstructor;
@@ -35,22 +36,35 @@ public class UserEnvironmentController {
      *
      * @return 环境配置
      */
-    @GetMapping("/list")
+    @GetMapping
     public List<SelectData> listUserEnvironmentsByUserId() {
         return userEnvironmentService.listUserEnvironmentsByUserId(AuthContextHolder.getUserId());
     }
 
     /**
-     * 查询环境配置信息
+     * 查询环境配置信息(修改使用)
      *
      * @param userEnvironmentId 环境配置id
      * @return 环境配置信息
      */
     @GetMapping("/{userEnvironmentId}")
-    public UserEnvironmentDto findUserEnvironmentByUserEnvironmentId(
+    public UserEnvironmentDto findUserEnvironmentDtoByUserEnvironmentId(
             @PathVariable("userEnvironmentId") Long userEnvironmentId) {
         return userEnvironmentService
                 .findUserEnvironmentDtoByUserEnvironmentId(userEnvironmentId, AuthContextHolder.getUserId());
+    }
+
+    /**
+     * 查询环境配置信息(详情使用)
+     *
+     * @param userEnvironmentId 环境配置id
+     * @return 环境配置信息
+     */
+    @GetMapping("/info/{userEnvironmentId}")
+    public UserEnvironmentVo findUserEnvironmentVoByUserEnvironmentId(
+            @PathVariable("userEnvironmentId") Long userEnvironmentId) {
+        return userEnvironmentService
+                .findUserEnvironmentVoByUserEnvironmentId(userEnvironmentId, AuthContextHolder.getUserId());
     }
 
     /**

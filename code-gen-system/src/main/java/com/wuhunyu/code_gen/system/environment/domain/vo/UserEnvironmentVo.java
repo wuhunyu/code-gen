@@ -1,25 +1,28 @@
-package com.wuhunyu.code_gen.system.environment.domain;
+package com.wuhunyu.code_gen.system.environment.domain.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 环境
+ * 环境配置Vo
  *
  * @author wuhunyu
  * @version 1.0
- * @date 2022/8/16 19:19
+ * @date 2022/8/18 15:12
  */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEnvironment {
+public class UserEnvironmentVo {
 
     /**
      * 环境id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userEnvironmentId;
 
     /**
@@ -58,8 +61,8 @@ public class UserEnvironment {
     private String version;
 
     /**
-     * 基类配置id
+     * 基类配置名称
      */
-    private Long baseClassId;
+    private String baseClassName;
 
 }

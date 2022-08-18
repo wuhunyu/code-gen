@@ -58,7 +58,7 @@ public class BaseClassRepositoryImpl implements BaseClassRepository {
         hSet(this.getBaseClassMapKey(baseClass.getBaseClassId()), baseClass);
 
         // 新增 用户与基类配置关系
-        zAdd(this.getBaseClassSetKey(userId), userId.toString());
+        zAdd(this.getBaseClassSetKey(userId), baseClass.getBaseClassId().toString());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class BaseClassRepositoryImpl implements BaseClassRepository {
     }
 
     @Override
-    public void deleteBaseClassByBaseClassId(Long baseClassId, Long userId) {
+    public void deleteBaseClassByBaseClassIdAndUserId(Long baseClassId, Long userId) {
         // 删除 用户与基类配置的关联关系
         zRemove(this.getBaseClassSetKey(userId), baseClassId.toString());
 
@@ -79,6 +79,11 @@ public class BaseClassRepositoryImpl implements BaseClassRepository {
     @Override
     public Long countBaseClassNumByUserId(Long userId) {
         return countZSet(this.getBaseClassSetKey(userId));
+    }
+
+    @Override
+    public boolean existBaseClass(Long baseClassId, Long userId) {
+        return zExists(this.getBaseClassSetKey(userId), baseClassId.toString());
     }
 
     /**

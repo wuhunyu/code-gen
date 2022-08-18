@@ -1,5 +1,7 @@
 package com.wuhunyu.code_gen.system.user.domain.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.wuhunyu.code_gen.system.operation_type.OperationTypeGroup;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +29,7 @@ public class UserDto {
      * 用户id
      */
     @NotNull(message = "用户id不能为空", groups = OperationTypeGroup.Update.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userId;
 
     /**

@@ -1,5 +1,7 @@
 package com.wuhunyu.code_gen.system.environment.domain.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.wuhunyu.code_gen.common.constants.CommonConstant;
 import com.wuhunyu.code_gen.system.operation_type.OperationTypeGroup;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ public class UserEnvironmentDto {
      * 环境id
      */
     @NotNull(message = "环境id不能为空", groups = OperationTypeGroup.Update.class)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long userEnvironmentId;
 
     /**
@@ -69,5 +72,12 @@ public class UserEnvironmentDto {
      */
     @NotBlank(message = "代码版本不能为空")
     private String version;
+
+    /**
+     * 基类配置id
+     */
+    @JsonSerialize(using = ToStringSerializer.class)
+    @NotNull(message = "基类不能为空")
+    private Long baseClassId;
 
 }
