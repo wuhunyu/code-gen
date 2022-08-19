@@ -1,5 +1,7 @@
 package com.wuhunyu.code_gen.common.utils;
 
+import com.wuhunyu.code_gen.common.constants.CommonConstant;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -17,14 +19,10 @@ public final class LocalDateTimeUtil {
     }
 
     /**
-     * 标准日期时间格式
-     */
-    public static final String DATE_TIME_FORMATTER_STR = "yyyy-MM-dd HH:mm:ss";
-
-    /**
      * 日期时间格式化对象
      */
-    public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_FORMATTER_STR);
+    public static final DateTimeFormatter DATE_TIME_FORMATTER =
+            DateTimeFormatter.ofPattern(CommonConstant.DATE_TIME_FORMATTER_STR);
 
     /**
      * 反格式化日期时间

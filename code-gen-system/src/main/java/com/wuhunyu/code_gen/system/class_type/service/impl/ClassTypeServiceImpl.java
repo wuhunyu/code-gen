@@ -2,6 +2,7 @@ package com.wuhunyu.code_gen.system.class_type.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.wuhunyu.code_gen.common.sequence.SequenceInstance;
+import com.wuhunyu.code_gen.common.utils.Assert;
 import com.wuhunyu.code_gen.system.class_type.domain.ClassType;
 import com.wuhunyu.code_gen.system.class_type.domain.ClassTypeVo;
 import com.wuhunyu.code_gen.system.class_type.domain.dto.ClassTypeDto;
@@ -14,7 +15,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -71,6 +74,9 @@ public class ClassTypeServiceImpl implements ClassTypeService {
 
     @Override
     public void refreshClassTypeDto(ClassTypeDto classTypeDto, Long userId) {
+        // jdbcType 重复性校验
+        this.checkRepeatClassType(classTypeDto.getClassTypeInfoDtos());
+        
         // 类型转换
         List<ClassType> classTypes = classTypeDto.getClassTypeInfoDtos()
                 .stream()
@@ -86,4 +92,19 @@ public class ClassTypeServiceImpl implements ClassTypeService {
         // 更新数据
         classTypeRepository.insertOrUpdateClassType(classTypes, classTypeDto.getUserEnvironmentId(), userId);
     }
+
+    /**
+     * 核对 jdbcType 不能重复
+     *
+     * @param classTypeInfoDtos 类型映射信息
+     */
+    private void checkRepeatClassType(List<ClassTypeDto.ClassTypeInfoDto> classTypeInfoDtos) {
+        // 确保 jdbcType 不能重复
+        Set<String> set = new HashSet<>();
+        for (ClassTypeDto.ClassTypeInfoDto classTypeInfoDto : classTypeInfoDtos) {
+            Assert.isTrue(set.contains(classTypeInfoDto.getJdbcType()), "数据库类型不能重复");
+            set.add(classTypeInfoDto.getJdbcType());
+        }
+    }
+
 }

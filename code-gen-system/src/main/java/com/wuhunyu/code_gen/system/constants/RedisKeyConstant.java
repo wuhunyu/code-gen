@@ -97,12 +97,34 @@ public final class RedisKeyConstant {
         /**
          * 类型映射信息
          */
-        public static final String CLASS_TYPE_MAP = "classTypeMap:";
+        public static final String CLASS_TYPE_MAP = PREFIX + "classTypeMap:";
 
         /**
          * 类型映射 环境 关系
          */
-        public static final String CLASS_TYPE_SET = "classTypeSet:";
+        public static final String CLASS_TYPE_SET = PREFIX + "classTypeSet:";
+
+    }
+
+    /**
+     * 数据源关系
+     */
+    public static final class DataSourceKeys {
+
+        private DataSourceKeys() {
+        }
+
+        public static final String PREFIX = RedisKeyConstant.PREFIX + "dataSource:";
+
+        /**
+         * 数据源信息
+         */
+        public static final String DATA_SOURCE_MAP = PREFIX + "dataSourceMap:";
+
+        /**
+         * 用户&数据源 关系
+         */
+        public static final String DATA_SOURCE_SET = PREFIX + "dataSourceSet:";
 
     }
 

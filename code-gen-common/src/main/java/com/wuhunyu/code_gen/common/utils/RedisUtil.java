@@ -387,7 +387,20 @@ public final class RedisUtil {
     public static Set<ZSetOperations.TypedTuple<String>> zRangeByScore(String zSetName, long startTime, long endTime,
                                                                        long startPage, long limit) {
         ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
-        return zSetOperations.rangeByScoreWithScores(zSetName, startTime, endTime, startPage, limit);
+        return zSetOperations.reverseRangeByScoreWithScores(zSetName, startTime, endTime, startPage, limit);
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param zSetName  zSet名称
+     * @param startPage 起始索引
+     * @param limit     记录数
+     * @return 查询结果
+     */
+    public static Set<ZSetOperations.TypedTuple<String>> zRangeByScore(String zSetName, long startPage, long limit) {
+        ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
+        return zSetOperations.reverseRangeWithScores(zSetName, startPage, limit);
     }
 
     /**
@@ -398,7 +411,7 @@ public final class RedisUtil {
      */
     public static Set<String> zRange(String zSetName) {
         ZSetOperations<String, String> zSetOperations = RedisUtil.getZSetOperations();
-        return zSetOperations.range(zSetName, 0L, -1L);
+        return zSetOperations.reverseRange(zSetName, 0L, -1L);
     }
 
     /**

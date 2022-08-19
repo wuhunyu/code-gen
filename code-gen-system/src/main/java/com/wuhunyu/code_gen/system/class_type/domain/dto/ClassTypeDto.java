@@ -36,7 +36,6 @@ public class ClassTypeDto {
          * 类型映射id
          */
         @JsonSerialize(using = ToStringSerializer.class)
-        @NotNull(message = "类型映射id不能为空")
         private Long classTypeId;
 
         /**
