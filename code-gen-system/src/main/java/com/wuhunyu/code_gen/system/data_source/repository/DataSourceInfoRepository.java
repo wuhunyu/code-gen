@@ -36,6 +36,14 @@ public interface DataSourceInfoRepository {
     Long countDataSourceInfo(Long userId, LocalDateTime startDatetime, LocalDateTime endDatetime);
 
     /**
+     * 查询指定用户下的全部数据源信息
+     *
+     * @param userId 用户id
+     * @return 数据源信息
+     */
+    List<DataSourceInfo> listDataSourceInfos(Long userId);
+
+    /**
      * 查询指定数据源id的数据源信息
      *
      * @param dataSourceId 数据源id

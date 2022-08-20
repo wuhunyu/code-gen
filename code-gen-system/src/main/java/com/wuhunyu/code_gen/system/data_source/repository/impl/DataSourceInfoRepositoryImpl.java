@@ -52,7 +52,7 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
                 zRangeByScore(this.findDataSourceInfoSetKey(userId),
                         startDatetime,
                         endDatetime,
-                        dataSourceInfoQuery.getStartPage(),
+                        dataSourceInfoQuery.getStartPage() - 1L,
                         dataSourceInfoQuery.getSize());
         if (CollUtil.isEmpty(typedTuples)) {
             return Collections.emptyList();
@@ -80,6 +80,18 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
                 endDatetime.getLong(ChronoField.MILLI_OF_SECOND);
 
         return countZSetByScore(this.findDataSourceInfoSetKey(userId), startDatetimeVal, endDatetimeVal);
+    }
+
+    @Override
+    public List<DataSourceInfo> listDataSourceInfos(Long userId) {
+        Set<String> dataSourceIds = zRange(this.findDataSourceInfoSetKey(userId));
+        if (CollUtil.isEmpty(dataSourceIds)) {
+            return Collections.emptyList();
+        }
+
+        return dataSourceIds.stream()
+                .map(dataSourceId -> hGetAll(this.findDataSourceInfoMapKey(dataSourceId), DataSourceInfo.class))
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.wuhunyu.code_gen.system.data_source.enums;
 
+import com.wuhunyu.code_gen.common.constants.CommonConstant;
 import com.wuhunyu.code_gen.common.domain.SelectData;
 
 import java.util.Arrays;
@@ -55,6 +56,24 @@ public enum DBTypeEnum {
                         dbTypeEnum.getTypeName(),
                         String.valueOf(dbTypeEnum.getType())))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 根据数据类型查询数据库类型名称
+     *
+     * @param type 数据类型
+     * @return 数据库类型名称
+     */
+    public static String findTypeNameByType(Integer type) {
+        if (type == null) {
+            return CommonConstant.BLANK_STR;
+        }
+        for (DBTypeEnum typeEnum : DBTypeEnum.values()) {
+            if (typeEnum.getType() == type) {
+                return typeEnum.getTypeName();
+            }
+        }
+        return CommonConstant.BLANK_STR;
     }
 
 }
