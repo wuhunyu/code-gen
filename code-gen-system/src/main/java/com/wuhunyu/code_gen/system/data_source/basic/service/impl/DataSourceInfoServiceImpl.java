@@ -1,15 +1,15 @@
-package com.wuhunyu.code_gen.system.data_source.service.impl;
+package com.wuhunyu.code_gen.system.data_source.basic.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.wuhunyu.code_gen.common.domain.SelectData;
 import com.wuhunyu.code_gen.common.sequence.SequenceInstance;
-import com.wuhunyu.code_gen.system.data_source.domain.DataSourceInfo;
-import com.wuhunyu.code_gen.system.data_source.domain.dto.DataSourceInfoDto;
-import com.wuhunyu.code_gen.system.data_source.domain.query.DataSourceInfoQuery;
-import com.wuhunyu.code_gen.system.data_source.domain.vo.DataSourceInfoVo;
-import com.wuhunyu.code_gen.system.data_source.enums.DBTypeEnum;
-import com.wuhunyu.code_gen.system.data_source.repository.DataSourceInfoRepository;
-import com.wuhunyu.code_gen.system.data_source.service.DataSourceInfoService;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.DataSourceInfo;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.dto.DataSourceInfoDto;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.query.DataSourceInfoQuery;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.vo.DataSourceInfoVo;
+import com.wuhunyu.code_gen.system.data_source.basic.enums.DBTypeEnum;
+import com.wuhunyu.code_gen.system.data_source.basic.repository.DataSourceInfoRepository;
+import com.wuhunyu.code_gen.system.data_source.basic.service.DataSourceInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;

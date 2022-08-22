@@ -1,4 +1,4 @@
-package com.wuhunyu.code_gen.system.data_source.enums;
+package com.wuhunyu.code_gen.system.data_source.basic.enums;
 
 import com.wuhunyu.code_gen.common.constants.CommonConstant;
 import com.wuhunyu.code_gen.common.domain.SelectData;

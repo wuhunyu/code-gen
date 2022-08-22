@@ -1,9 +1,9 @@
-package com.wuhunyu.code_gen.system.data_source.service;
+package com.wuhunyu.code_gen.system.data_source.basic.service;
 
 import com.wuhunyu.code_gen.common.domain.SelectData;
-import com.wuhunyu.code_gen.system.data_source.domain.dto.DataSourceInfoDto;
-import com.wuhunyu.code_gen.system.data_source.domain.query.DataSourceInfoQuery;
-import com.wuhunyu.code_gen.system.data_source.domain.vo.DataSourceInfoVo;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.dto.DataSourceInfoDto;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.query.DataSourceInfoQuery;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.vo.DataSourceInfoVo;
 
 import java.util.List;
 

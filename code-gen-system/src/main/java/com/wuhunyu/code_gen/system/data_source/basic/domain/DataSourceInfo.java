@@ -1,4 +1,4 @@
-package com.wuhunyu.code_gen.system.data_source.domain;
+package com.wuhunyu.code_gen.system.data_source.basic.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,9 +1,9 @@
-package com.wuhunyu.code_gen.system.data_source.domain.query;
+package com.wuhunyu.code_gen.system.data_source.basic.domain.query;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wuhunyu.code_gen.common.constants.CommonConstant;
 import com.wuhunyu.code_gen.system.common.BaseQuery;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -25,13 +25,13 @@ public class DataSourceInfoQuery extends BaseQuery {
     /**
      * 开始日期时间
      */
-    @DateTimeFormat(pattern = CommonConstant.DATE_TIME_FORMATTER_STR)
+    @JsonFormat(pattern = CommonConstant.DATE_TIME_FORMATTER_STR)
     private LocalDateTime startDatetime;
 
     /**
      * 结束日期时间
      */
-    @DateTimeFormat(pattern = CommonConstant.DATE_TIME_FORMATTER_STR)
+    @JsonFormat(pattern = CommonConstant.DATE_TIME_FORMATTER_STR)
     private LocalDateTime endDatetime;
 
 }

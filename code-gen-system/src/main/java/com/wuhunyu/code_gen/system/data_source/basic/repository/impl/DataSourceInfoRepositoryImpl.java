@@ -1,9 +1,9 @@
-package com.wuhunyu.code_gen.system.data_source.repository.impl;
+package com.wuhunyu.code_gen.system.data_source.basic.repository.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import com.wuhunyu.code_gen.system.data_source.domain.DataSourceInfo;
-import com.wuhunyu.code_gen.system.data_source.domain.query.DataSourceInfoQuery;
-import com.wuhunyu.code_gen.system.data_source.repository.DataSourceInfoRepository;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.DataSourceInfo;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.query.DataSourceInfoQuery;
+import com.wuhunyu.code_gen.system.data_source.basic.repository.DataSourceInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
@@ -11,7 +11,7 @@ import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,11 +41,17 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
         // 日期时间查询条件
         long startDatetime = dataSourceInfoQuery.getStartDatetime() == null ?
                 MIN_IN_VALID_DATE_TIME :
-                dataSourceInfoQuery.getStartDatetime().getLong(ChronoField.MILLI_OF_SECOND);
+                dataSourceInfoQuery.getStartDatetime()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli();
 
         long endDatetime = dataSourceInfoQuery.getEndDatetime() == null ?
                 MAX_IN_VALID_DATE_TIME :
-                dataSourceInfoQuery.getEndDatetime().getLong(ChronoField.MILLI_OF_SECOND);
+                dataSourceInfoQuery.getEndDatetime()
+                        .atZone(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli();
 
         // 获取数据源id集合
         Set<ZSetOperations.TypedTuple<String>> typedTuples =
@@ -74,10 +80,14 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
         // 日期时间查询条件
         long startDatetimeVal = startDatetime == null ?
                 MIN_IN_VALID_DATE_TIME :
-                startDatetime.getLong(ChronoField.MILLI_OF_SECOND);
+                startDatetime.atZone(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli();
         long endDatetimeVal = endDatetime == null ?
                 MAX_IN_VALID_DATE_TIME :
-                endDatetime.getLong(ChronoField.MILLI_OF_SECOND);
+                endDatetime.atZone(ZoneId.systemDefault())
+                        .toInstant()
+                        .toEpochMilli();
 
         return countZSetByScore(this.findDataSourceInfoSetKey(userId), startDatetimeVal, endDatetimeVal);
     }
@@ -113,7 +123,9 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
 
     @Override
     public void updateDataSourceInfo(DataSourceInfo dataSourceInfo, Long userId) {
-        // 直接修改 数据源信息
+        // 更新 用户&数据源关联 的更新日期时间
+        zAdd(this.findDataSourceInfoSetKey(userId), dataSourceInfo.getDataSourceId().toString());
+        // 数据源信息
         hSet(this.findDataSourceInfoMapKey(dataSourceInfo.getDataSourceId()), dataSourceInfo);
     }
 

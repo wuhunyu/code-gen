@@ -59,7 +59,11 @@ public class RequestAspect {
             // 抛出异常，不对异常进行处理
             throw e;
         }
-        log.info("请求结果：{}", proceed == null ? null : new ObjectMapper().writeValueAsString(proceed));
+        log.info("请求结果：{}", proceed == null ?
+                null :
+                new ObjectMapper()
+                        .findAndRegisterModules()
+                        .writeValueAsString(proceed));
         log.info("请求接口耗时: {} ms", System.currentTimeMillis() - startTime);
         log.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
         return proceed;

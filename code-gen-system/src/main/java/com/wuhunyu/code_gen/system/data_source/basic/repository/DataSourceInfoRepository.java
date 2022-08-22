@@ -1,7 +1,7 @@
-package com.wuhunyu.code_gen.system.data_source.repository;
+package com.wuhunyu.code_gen.system.data_source.basic.repository;
 
-import com.wuhunyu.code_gen.system.data_source.domain.DataSourceInfo;
-import com.wuhunyu.code_gen.system.data_source.domain.query.DataSourceInfoQuery;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.DataSourceInfo;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.query.DataSourceInfoQuery;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -19,7 +19,7 @@ public final class CommonConstant {
     public static final String DEFAULT_EXCEPTION_MSG = "系统资产繁忙";
 
     /**
-     * 空白字符串s
+     * 空白字符串
      */
     public static final String BLANK_STR = "";
 
@@ -44,7 +44,12 @@ public final class CommonConstant {
     public static final String PURE_ENGLISH_CHAR_STR_REGEXP = "^[a-zA-Z]{1,120}$";
 
     /**
-     * 标准日期时间格式
+     * yyyy-MM-dd
+     */
+    public static final String DATE_FORMATTER_STR = "yyyy-MM-dd";
+
+    /**
+     * yyyy-MM-dd HH:mm:ss,标准日期时间格式
      */
     public static final String DATE_TIME_FORMATTER_STR = "yyyy-MM-dd HH:mm:ss";
 
