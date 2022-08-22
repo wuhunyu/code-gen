@@ -1,8 +1,17 @@
 package com.wuhunyu.code_gen.system.data_source.dynamic.utils;
 
+import cn.hutool.extra.spring.SpringUtil;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
+import com.baomidou.dynamic.datasource.creator.DruidDataSourceCreator;
+import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
+import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.dto.DataSourceInfoDto;
+import com.wuhunyu.code_gen.system.data_source.basic.enums.DBTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -42,6 +51,87 @@ public final class DataSourceUtil {
             log.info("{}", e.getLocalizedMessage(), e);
             return false;
         }
+    }
+
+    /**
+     * 新增一个数据源
+     *
+     * @param dataSourceInfoDto 数据源配置
+     */
+    public static void addDataSource(DataSourceInfoDto dataSourceInfoDto) {
+        // 数据源属性配置
+        DataSourceProperty dataSourceProperty = new DataSourceProperty();
+        dataSourceProperty.setLazy(true);
+        dataSourceProperty.setType(DataSourceUtil.findDataSourceByDbType(dataSourceInfoDto.getDbType()));
+        dataSourceProperty.setUrl(dataSourceInfoDto.getConnectionUrl());
+        dataSourceProperty.setUsername(dataSourceInfoDto.getUserName());
+        dataSourceProperty.setPassword(dataSourceInfoDto.getPassword());
+        dataSourceProperty.setPoolName(dataSourceInfoDto.getDataSourceId().toString());
+
+        // 获取数据源对象
+        DynamicRoutingDataSource dynamicRoutingDataSource =
+                (DynamicRoutingDataSource) SpringUtil.getBean(DataSource.class);
+        // 获取druid数据源创建对象
+        DruidDataSourceCreator druidDataSourceCreator = SpringUtil.getBean(DruidDataSourceCreator.class);
+        DataSource dataSource = druidDataSourceCreator.createDataSource(dataSourceProperty);
+        dynamicRoutingDataSource.addDataSource(dataSourceInfoDto.getDataSourceId().toString(), dataSource);
+    }
+
+    /**
+     * 修改一个数据源配置
+     *
+     * @param dataSourceInfoDto 数据源配置
+     */
+    public static void updateDataSource(DataSourceInfoDto dataSourceInfoDto) {
+        // 首先移除该数据源
+        DataSourceUtil.deleteDataSource(dataSourceInfoDto.getDataSourceId());
+
+        // 新增
+        DataSourceUtil.addDataSource(dataSourceInfoDto);
+    }
+
+    /**
+     * 移除一个数据源配置
+     *
+     * @param dataSourceId 数据源ids
+     */
+    public static void deleteDataSource(Long dataSourceId) {
+        // 获取数据源对象
+        DynamicRoutingDataSource dynamicRoutingDataSource =
+                (DynamicRoutingDataSource) SpringUtil.getBean(DataSource.class);
+        dynamicRoutingDataSource.removeDataSource(dataSourceId.toString());
+    }
+
+    /**
+     * 手动切换数据源
+     *
+     * @param dataSourceId 数据源id
+     */
+    public static void openDataSource(Long dataSourceId) {
+        DynamicDataSourceContextHolder.push(String.valueOf(dataSourceId));
+    }
+
+    /**
+     * 手动关闭数据源
+     *
+     * @param dataSourceId 数据源id
+     */
+    public static void closeDataSource(Long dataSourceId) {
+        DynamicDataSourceContextHolder.poll();
+    }
+
+    /**
+     * 查询对应的数据源类型
+     *
+     * @param dbType 数据源类型
+     * @return 数据源类型
+     */
+    private static Class<? extends DataSource> findDataSourceByDbType(int dbType) {
+        // MySQL
+        if (dbType == DBTypeEnum.MYSQL.getType()) {
+            return DruidDataSource.class;
+        }
+        return null;
     }
 
 }

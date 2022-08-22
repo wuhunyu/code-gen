@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wuhunyu.code_gen.system.data_source.dynamic.mapper.DynamicDataSourceMapper">
+
+    <select id="findCurDataBaseName" resultType="java.lang.String">
+        select
+            database()
+        limit 1
+    </select>
+
+    <select id="listTableNames" resultType="java.lang.String">
+        select
+            TABLE_NAME
+        from
+            information_schema.tables
+        where
+            TABLE_SCHEMA = #{dataBaseName}
+    </select>
+
+    <select id="findTableCommentByTableName" resultType="java.lang.String">
+        select
+            TABLE_COMMENT
+        from
+            information_schema.tables
+        where
+            TABLE_SCHEMA = #{dataBaseName}
+                and TABLE_NAME = #{tableName}
+        limit 1
+    </select>
+
+</mapper>

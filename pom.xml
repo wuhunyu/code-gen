@@ -31,6 +31,7 @@
         <spring-boot.version>2.7.2</spring-boot.version>
         <hutool.version>5.8.5</hutool.version>
         <druid.version>1.2.11</druid.version>
+        <mybatis-plus.version>3.5.2</mybatis-plus.version>
         <dynamic-datasource.version>3.5.1</dynamic-datasource.version>
         <jwt.version>4.0.0</jwt.version>
     </properties>
@@ -62,6 +63,11 @@
             </dependency>
 
             <!-- 动态数据源 -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
