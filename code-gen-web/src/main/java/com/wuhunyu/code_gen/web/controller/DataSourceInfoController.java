@@ -96,4 +96,16 @@ public class DataSourceInfoController {
         dataSourceInfoService.deleteDataSourceInfoByDataSourceId(dataSourceId, AuthContextHolder.getUserId());
     }
 
+    /**
+     * 测试数据库连接是否正常
+     *
+     * @param dataSourceInfoDto 数据源信息
+     * @return 是否正常(true : 正常 ; false : 不正常)
+     */
+    @PostMapping("/checkConnection")
+    public Boolean checkConnection(@RequestBody @Validated(OperationTypeGroup.Other.class)
+                                           DataSourceInfoDto dataSourceInfoDto) {
+        return dataSourceInfoService.checkConnection(dataSourceInfoDto);
+    }
+
 }

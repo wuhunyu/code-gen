@@ -1,6 +1,8 @@
-package com.wuhunyu.code_gen.system.data_source.dynamic.domain;
+package com.wuhunyu.code_gen.system.data_source.dynamic.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.wuhunyu.code_gen.common.constants.CommonConstant;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,27 +11,23 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 表数据
+ * 表格数据Vo
  *
  * @author wuhunyu
  * @version 1.0
- * @date 2022/8/22 13:20
+ * @date 2022/8/23 19:49
  */
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TableData {
+public class TableDataVo {
 
     /**
      * 表id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long tableId;
-
-    /**
-     * 数据源id
-     */
-    private Long dataSourceId;
 
     /**
      * 表名称

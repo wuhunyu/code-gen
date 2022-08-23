@@ -28,6 +28,11 @@ public class FieldData {
     private String fieldName;
 
     /**
+     * 属性名称
+     */
+    private String propertyName;
+
+    /**
      * 字段类型(小写)
      */
     private String fieldType;

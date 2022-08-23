@@ -9,24 +9,45 @@
         limit 1
     </select>
 
-    <select id="listTableNames" resultType="java.lang.String">
+    <resultMap id="listTablesMap" type="com.wuhunyu.code_gen.system.data_source.dynamic.domain.TableData">
+        <result column="TABLE_NAME" property="tableName" javaType="String"/>
+        <result column="TABLE_COMMENT" property="tableComment" javaType="String"/>
+        <result column="CREATE_TIME" property="createDateTime" javaType="java.time.LocalDateTime"/>
+    </resultMap>
+
+    <select id="listTables" resultMap="listTablesMap">
         select
-            TABLE_NAME
+            `TABLE_NAME`,
+            TABLE_COMMENT,
+            CREATE_TIME
         from
             information_schema.tables
         where
             TABLE_SCHEMA = #{dataBaseName}
+        order by
+            CREATE_TIME desc
     </select>
 
-    <select id="findTableCommentByTableName" resultType="java.lang.String">
+    <resultMap id="listFieldsByTableNameMap" type="com.wuhunyu.code_gen.system.data_source.dynamic.domain.FieldData">
+        <result column="COLUMN_NAME" property="fieldName" javaType="String"/>
+        <result column="DATA_TYPE" property="fieldType" javaType="String"/>
+        <result column="primaryKey" property="primaryKey" javaType="Integer"/>
+        <result column="COLUMN_COMMENT" property="fieldComment" javaType="String"/>
+    </resultMap>
+
+    <select id="listFieldsByTableName" resultMap="listFieldsByTableNameMap">
         select
-            TABLE_COMMENT
+            `COLUMN_NAME`,
+            DATA_TYPE,
+            if(COLUMN_KEY = 'PRI', #{primaryKeyValue}, #{nonPrimaryKeyValue}) as `primaryKey`,
+            COLUMN_COMMENT
         from
-            information_schema.tables
+            information_schema.columns
         where
             TABLE_SCHEMA = #{dataBaseName}
-                and TABLE_NAME = #{tableName}
-        limit 1
+                and `TABLE_NAME` = #{tableName}
+        order by
+            ORDINAL_POSITION asc
     </select>
 
 </mapper>

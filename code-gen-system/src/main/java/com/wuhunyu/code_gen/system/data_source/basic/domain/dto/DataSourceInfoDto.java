@@ -33,31 +33,44 @@ public class DataSourceInfoDto {
     /**
      * 数据库类型
      */
-    @NotNull(message = "数据源类型不能为空")
+    @NotNull(message = "数据源类型不能为空", groups = {
+            OperationTypeGroup.Insert.class,
+            OperationTypeGroup.Update.class})
     private Integer dbType;
 
     /**
      * 连接名
      */
-    @NotBlank(message = "连接名不能为空")
+    @NotBlank(message = "连接名不能为空", groups = {
+            OperationTypeGroup.Insert.class,
+            OperationTypeGroup.Update.class})
     private String connectionName;
 
     /**
      * 连接url
      */
-    @NotBlank(message = "连接url不能为空")
+    @NotBlank(message = "连接url不能为空", groups = {
+            OperationTypeGroup.Insert.class,
+            OperationTypeGroup.Update.class,
+            OperationTypeGroup.Other.class})
     private String connectionUrl;
 
     /**
      * 用户名称
      */
-    @NotBlank(message = "用户名称不能为空")
+    @NotBlank(message = "用户名称不能为空", groups = {
+            OperationTypeGroup.Insert.class,
+            OperationTypeGroup.Update.class,
+            OperationTypeGroup.Other.class})
     private String userName;
 
     /**
      * 密码
      */
-    @NotBlank(message = "密码不能为空")
+    @NotBlank(message = "密码不能为空", groups = {
+            OperationTypeGroup.Insert.class,
+            OperationTypeGroup.Update.class,
+            OperationTypeGroup.Other.class})
     private String password;
 
 }

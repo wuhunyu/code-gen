@@ -10,6 +10,7 @@ import com.wuhunyu.code_gen.system.data_source.basic.domain.vo.DataSourceInfoVo;
 import com.wuhunyu.code_gen.system.data_source.basic.enums.DBTypeEnum;
 import com.wuhunyu.code_gen.system.data_source.basic.repository.DataSourceInfoRepository;
 import com.wuhunyu.code_gen.system.data_source.basic.service.DataSourceInfoService;
+import com.wuhunyu.code_gen.system.data_source.dynamic.utils.DataSourceUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
@@ -78,6 +79,21 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
     }
 
     @Override
+    public DataSourceInfoDto findDataSourceInfoDtoByDataSourceId(Long dataSourceId, Long userId) {
+        DataSourceInfo dataSourceInfo = dataSourceInfoRepository.findDataSourceInfoByDataSourceId(dataSourceId, userId);
+        if (dataSourceInfo == null) {
+            return null;
+        }
+        return new DataSourceInfoDto(
+                dataSourceInfo.getDataSourceId(),
+                dataSourceInfo.getDbType(),
+                dataSourceInfo.getConnectionName(),
+                dataSourceInfo.getConnectionUrl(),
+                dataSourceInfo.getUserName(),
+                dataSourceInfo.getPassword());
+    }
+
+    @Override
     public void insertDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long userId) {
         // 构建 数据源记录
         DataSourceInfo dataSourceInfo = new DataSourceInfo(
@@ -129,5 +145,13 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
             return;
         }
         dataSourceInfoRepository.deleteDataSourceInfoByDataSourceId(dataSourceId, userId);
+    }
+
+    @Override
+    public boolean checkConnection(DataSourceInfoDto dataSourceInfoDto) {
+        return DataSourceUtil.checkDataSourceConnection(
+                dataSourceInfoDto.getConnectionUrl(),
+                dataSourceInfoDto.getUserName(),
+                dataSourceInfoDto.getPassword());
     }
 }

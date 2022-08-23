@@ -103,6 +103,20 @@ public final class DataSourceUtil {
     }
 
     /**
+     * 判断当前数据源是否已存在
+     *
+     * @param dataSourceId 数据源id
+     * @return 当前数据源是否已存在(true : 存在 ; false : 不存在)
+     */
+    public static boolean existsDataSource(Long dataSourceId) {
+        // 获取数据源对象
+        DynamicRoutingDataSource dynamicRoutingDataSource =
+                (DynamicRoutingDataSource) SpringUtil.getBean(DataSource.class);
+        DataSource dataSource = dynamicRoutingDataSource.getDataSource(dataSourceId.toString());
+        return dataSource != null;
+    }
+
+    /**
      * 手动切换数据源
      *
      * @param dataSourceId 数据源id

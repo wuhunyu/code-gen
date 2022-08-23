@@ -44,6 +44,15 @@ public interface DataSourceInfoService {
     List<SelectData> listDataSourceInfoForSelect(Long userId);
 
     /**
+     * 根据数据源id查询数据源信息
+     *
+     * @param dataSourceId 数据源id
+     * @param userId       用户id
+     * @return 数据源信息
+     */
+    DataSourceInfoDto findDataSourceInfoDtoByDataSourceId(Long dataSourceId, Long userId);
+
+    /**
      * 新增一条数据源记录
      *
      * @param dataSourceInfoDto 数据源信息
@@ -66,5 +75,13 @@ public interface DataSourceInfoService {
      * @param userId       用户id
      */
     void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long userId);
+
+    /**
+     * 测试数据库连接是否正常
+     *
+     * @param dataSourceInfoDto 数据源信息
+     * @return 是否正常(true : 正常 ; false : 不正常)
+     */
+    boolean checkConnection(DataSourceInfoDto dataSourceInfoDto);
 
 }
