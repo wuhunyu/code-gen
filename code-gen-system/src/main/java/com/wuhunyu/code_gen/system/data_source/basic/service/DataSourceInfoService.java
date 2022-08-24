@@ -21,60 +21,60 @@ public interface DataSourceInfoService {
      * 分页查询数据源列表数据
      *
      * @param dataSourceInfoQuery 数据源查询对象
-     * @param useEnvironmentId    环境id
+     * @param userId              用户id
      * @return 数据源列表数据
      */
-    List<DataSourceInfoVo> pageDataSourceInfo(DataSourceInfoQuery dataSourceInfoQuery, Long useEnvironmentId);
+    List<DataSourceInfoVo> pageDataSourceInfo(DataSourceInfoQuery dataSourceInfoQuery, Long userId);
 
     /**
      * 统计数据源列表的数量
      *
      * @param dataSourceInfoQuery 数据源查询对象
-     * @param useEnvironmentId    环境id
+     * @param userId              用户id
      * @return 数据源列表的数量
      */
-    Long countDataSourceInfo(DataSourceInfoQuery dataSourceInfoQuery, Long useEnvironmentId);
+    Long countDataSourceInfo(DataSourceInfoQuery dataSourceInfoQuery, Long userId);
 
     /**
      * 查询指定用户下的所有数据源信息
      *
-     * @param useEnvironmentId 环境id
+     * @param userId 用户id
      * @return 数据源信息
      */
-    List<SelectData> listDataSourceInfoForSelect(Long useEnvironmentId);
+    List<SelectData> listDataSourceInfoForSelect(Long userId);
 
     /**
      * 根据数据源id查询数据源信息
      *
-     * @param dataSourceId     数据源id
-     * @param useEnvironmentId 环境id
+     * @param dataSourceId 数据源id
+     * @param userId       用户id
      * @return 数据源信息
      */
-    DataSourceInfoDto findDataSourceInfoDtoByDataSourceId(Long dataSourceId, Long useEnvironmentId);
+    DataSourceInfoDto findDataSourceInfoDtoByDataSourceId(Long dataSourceId, Long userId);
 
     /**
      * 新增一条数据源记录
      *
      * @param dataSourceInfoDto 数据源信息
-     * @param useEnvironmentId  环境id
+     * @param userId            用户id
      */
-    void insertDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long useEnvironmentId);
+    void insertDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long userId);
 
     /**
      * 修改一条数据源记录
      *
      * @param dataSourceInfoDto 数据源信息
-     * @param useEnvironmentId  环境id
+     * @param userId            用户id
      */
-    void updateDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long useEnvironmentId);
+    void updateDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long userId);
 
     /**
      * 删除一条数据源记录
      *
-     * @param dataSourceId     数据源id
-     * @param useEnvironmentId 环境id
+     * @param dataSourceId 数据源id
+     * @param userId       用户id
      */
-    void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long useEnvironmentId);
+    void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long userId);
 
     /**
      * 测试数据库连接是否正常

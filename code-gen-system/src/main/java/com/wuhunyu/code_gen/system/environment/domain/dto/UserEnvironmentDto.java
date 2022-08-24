@@ -80,4 +80,11 @@ public class UserEnvironmentDto {
     @NotNull(message = "基类不能为空")
     private Long baseClassId;
 
+    /**
+     * 数据源id
+     */
+    @JsonSerialize(using = ToStringSerializer.class)
+    @NotNull(message = "数据源不能为空")
+    private Long dataSourceId;
+
 }

@@ -63,4 +63,9 @@ public final class CommonConstant {
      */
     public static final long MAX_IN_VALID_DATE_TIME = 4102376399999L;
 
+    /**
+     * 无效值
+     */
+    public static final int INVALID_NUM = -1;
+
 }

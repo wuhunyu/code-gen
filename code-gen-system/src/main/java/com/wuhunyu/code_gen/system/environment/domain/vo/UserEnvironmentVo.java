@@ -65,4 +65,9 @@ public class UserEnvironmentVo {
      */
     private String baseClassName;
 
+    /**
+     * 连接名称
+     */
+    private String connectionName;
+
 }

@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.wuhunyu.code_gen.system.constants.RedisKeyConstant.DataSourceKeys.*;
+import static com.wuhunyu.code_gen.common.constants.CommonConstant.MAX_IN_VALID_DATE_TIME;
+import static com.wuhunyu.code_gen.common.constants.CommonConstant.MIN_IN_VALID_DATE_TIME;
 import static com.wuhunyu.code_gen.common.utils.RedisUtil.*;
-import static com.wuhunyu.code_gen.common.constants.CommonConstant.*;
+import static com.wuhunyu.code_gen.system.constants.RedisKeyConstant.DataSourceKeys.DATA_SOURCE_MAP;
+import static com.wuhunyu.code_gen.system.constants.RedisKeyConstant.DataSourceKeys.DATA_SOURCE_SET;
 
 /**
  * 数据源 数据访问实现
@@ -37,7 +39,7 @@ import static com.wuhunyu.code_gen.common.constants.CommonConstant.*;
 public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
 
     @Override
-    public List<DataSourceInfo> pageDataSourceInfo(Long useEnvironmentId, DataSourceInfoQuery dataSourceInfoQuery) {
+    public List<DataSourceInfo> pageDataSourceInfo(Long userId, DataSourceInfoQuery dataSourceInfoQuery) {
         // 日期时间查询条件
         long startDatetime = dataSourceInfoQuery.getStartDatetime() == null ?
                 MIN_IN_VALID_DATE_TIME :
@@ -55,7 +57,7 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
 
         // 获取数据源id集合
         Set<ZSetOperations.TypedTuple<String>> typedTuples =
-                zRangeByScore(this.findDataSourceInfoSetKey(useEnvironmentId),
+                zRangeByScore(this.findDataSourceInfoSetKey(userId),
                         startDatetime,
                         endDatetime,
                         dataSourceInfoQuery.getStartPage() - 1L,
@@ -76,7 +78,7 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
     }
 
     @Override
-    public Long countDataSourceInfo(Long useEnvironmentId, LocalDateTime startDatetime, LocalDateTime endDatetime) {
+    public Long countDataSourceInfo(Long userId, LocalDateTime startDatetime, LocalDateTime endDatetime) {
         // 日期时间查询条件
         long startDatetimeVal = startDatetime == null ?
                 MIN_IN_VALID_DATE_TIME :
@@ -89,12 +91,12 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
                         .toInstant()
                         .toEpochMilli();
 
-        return countZSetByScore(this.findDataSourceInfoSetKey(useEnvironmentId), startDatetimeVal, endDatetimeVal);
+        return countZSetByScore(this.findDataSourceInfoSetKey(userId), startDatetimeVal, endDatetimeVal);
     }
 
     @Override
-    public List<DataSourceInfo> listDataSourceInfos(Long useEnvironmentId) {
-        Set<String> dataSourceIds = zRange(this.findDataSourceInfoSetKey(useEnvironmentId));
+    public List<DataSourceInfo> listDataSourceInfos(Long userId) {
+        Set<String> dataSourceIds = zRange(this.findDataSourceInfoSetKey(userId));
         if (CollUtil.isEmpty(dataSourceIds)) {
             return Collections.emptyList();
         }
@@ -105,8 +107,8 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
     }
 
     @Override
-    public DataSourceInfo findDataSourceInfoByDataSourceId(Long dataSourceId, Long useEnvironmentId) {
-        boolean exists = zExists(this.findDataSourceInfoSetKey(useEnvironmentId), dataSourceId.toString());
+    public DataSourceInfo findDataSourceInfoByDataSourceId(Long dataSourceId, Long userId) {
+        boolean exists = zExists(this.findDataSourceInfoSetKey(userId), dataSourceId.toString());
         if (!exists) {
             return null;
         }
@@ -114,25 +116,25 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
     }
 
     @Override
-    public void insertDataSourceInfo(DataSourceInfo dataSourceInfo, Long useEnvironmentId) {
+    public void insertDataSourceInfo(DataSourceInfo dataSourceInfo, Long userId) {
         // 新增 数据源信息
         hSet(this.findDataSourceInfoMapKey(dataSourceInfo.getDataSourceId()), dataSourceInfo);
         // 新增 用户&数据源关联
-        zAdd(this.findDataSourceInfoSetKey(useEnvironmentId), dataSourceInfo.getDataSourceId().toString());
+        zAdd(this.findDataSourceInfoSetKey(userId), dataSourceInfo.getDataSourceId().toString());
     }
 
     @Override
-    public void updateDataSourceInfo(DataSourceInfo dataSourceInfo, Long useEnvironmentId) {
+    public void updateDataSourceInfo(DataSourceInfo dataSourceInfo, Long userId) {
         // 更新 用户&数据源关联 的更新日期时间
-        zAdd(this.findDataSourceInfoSetKey(useEnvironmentId), dataSourceInfo.getDataSourceId().toString());
+        zAdd(this.findDataSourceInfoSetKey(userId), dataSourceInfo.getDataSourceId().toString());
         // 数据源信息
         hSet(this.findDataSourceInfoMapKey(dataSourceInfo.getDataSourceId()), dataSourceInfo);
     }
 
     @Override
-    public void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long useEnvironmentId) {
+    public void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long userId) {
         // 删除 用户&数据源关联
-        zRemove(this.findDataSourceInfoSetKey(useEnvironmentId), dataSourceId.toString());
+        zRemove(this.findDataSourceInfoSetKey(userId), dataSourceId.toString());
         // 删除 数据源信息
         delete(this.findDataSourceInfoMapKey(dataSourceId));
     }
@@ -140,11 +142,11 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
     /**
      * 查询 用户&数据源 关系key
      *
-     * @param useEnvironmentId 环境id
+     * @param userId 用户id
      * @return 用户&数据源 关系key
      */
-    private String findDataSourceInfoSetKey(Long useEnvironmentId) {
-        return DATA_SOURCE_SET + useEnvironmentId;
+    private String findDataSourceInfoSetKey(Long userId) {
+        return DATA_SOURCE_SET + userId;
     }
 
     /**

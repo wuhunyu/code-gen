@@ -39,8 +39,8 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
     private final DataSourceInfoRepository dataSourceInfoRepository;
 
     @Override
-    public List<DataSourceInfoVo> pageDataSourceInfo(DataSourceInfoQuery dataSourceInfoQuery, Long useEnvironmentId) {
-        List<DataSourceInfo> dataSourceInfos = dataSourceInfoRepository.pageDataSourceInfo(useEnvironmentId, dataSourceInfoQuery);
+    public List<DataSourceInfoVo> pageDataSourceInfo(DataSourceInfoQuery dataSourceInfoQuery, Long userId) {
+        List<DataSourceInfo> dataSourceInfos = dataSourceInfoRepository.pageDataSourceInfo(userId, dataSourceInfoQuery);
         if (CollUtil.isEmpty(dataSourceInfos)) {
             return Collections.emptyList();
         }
@@ -58,15 +58,15 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
     }
 
     @Override
-    public Long countDataSourceInfo(DataSourceInfoQuery dataSourceInfoQuery, Long useEnvironmentId) {
-        Long size = dataSourceInfoRepository.countDataSourceInfo(useEnvironmentId,
+    public Long countDataSourceInfo(DataSourceInfoQuery dataSourceInfoQuery, Long userId) {
+        Long size = dataSourceInfoRepository.countDataSourceInfo(userId,
                 dataSourceInfoQuery.getStartDatetime(), dataSourceInfoQuery.getEndDatetime());
         return size == null ? 0L : size;
     }
 
     @Override
-    public List<SelectData> listDataSourceInfoForSelect(Long useEnvironmentId) {
-        List<DataSourceInfo> dataSourceInfos = dataSourceInfoRepository.listDataSourceInfos(useEnvironmentId);
+    public List<SelectData> listDataSourceInfoForSelect(Long userId) {
+        List<DataSourceInfo> dataSourceInfos = dataSourceInfoRepository.listDataSourceInfos(userId);
         if (CollUtil.isEmpty(dataSourceInfos)) {
             return Collections.emptyList();
         }
@@ -79,8 +79,8 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
     }
 
     @Override
-    public DataSourceInfoDto findDataSourceInfoDtoByDataSourceId(Long dataSourceId, Long useEnvironmentId) {
-        DataSourceInfo dataSourceInfo = dataSourceInfoRepository.findDataSourceInfoByDataSourceId(dataSourceId, useEnvironmentId);
+    public DataSourceInfoDto findDataSourceInfoDtoByDataSourceId(Long dataSourceId, Long userId) {
+        DataSourceInfo dataSourceInfo = dataSourceInfoRepository.findDataSourceInfoByDataSourceId(dataSourceId, userId);
         if (dataSourceInfo == null) {
             return null;
         }
@@ -94,7 +94,7 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
     }
 
     @Override
-    public void insertDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long useEnvironmentId) {
+    public void insertDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long userId) {
         // 构建 数据源记录
         DataSourceInfo dataSourceInfo = new DataSourceInfo(
                 SequenceInstance.INSTANCE.nextId(),
@@ -106,14 +106,14 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
                 LocalDateTime.now());
 
         // 新增 数据源
-        dataSourceInfoRepository.insertDataSourceInfo(dataSourceInfo, useEnvironmentId);
+        dataSourceInfoRepository.insertDataSourceInfo(dataSourceInfo, userId);
     }
 
     @Override
-    public void updateDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long useEnvironmentId) {
+    public void updateDataSourceInfo(DataSourceInfoDto dataSourceInfoDto, Long userId) {
         // 查询是否存在
         DataSourceInfo sourceInfoByDataSourceInfo =
-                dataSourceInfoRepository.findDataSourceInfoByDataSourceId(dataSourceInfoDto.getDataSourceId(), useEnvironmentId);
+                dataSourceInfoRepository.findDataSourceInfoByDataSourceId(dataSourceInfoDto.getDataSourceId(), userId);
 
         // 构建 修改数据记录
         if (sourceInfoByDataSourceInfo == null) {
@@ -133,18 +133,18 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
                         null : dataSourceInfoDto.getPassword(),
                 LocalDateTime.now());
         // 执行修改
-        dataSourceInfoRepository.updateDataSourceInfo(newDataSourceInfo, useEnvironmentId);
+        dataSourceInfoRepository.updateDataSourceInfo(newDataSourceInfo, userId);
     }
 
     @Override
-    public void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long useEnvironmentId) {
+    public void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long userId) {
         // 查询是否存在
-        DataSourceInfo sourceInfo = dataSourceInfoRepository.findDataSourceInfoByDataSourceId(dataSourceId, useEnvironmentId);
+        DataSourceInfo sourceInfo = dataSourceInfoRepository.findDataSourceInfoByDataSourceId(dataSourceId, userId);
         // 执行删除
         if (sourceInfo == null) {
             return;
         }
-        dataSourceInfoRepository.deleteDataSourceInfoByDataSourceId(dataSourceId, useEnvironmentId);
+        dataSourceInfoRepository.deleteDataSourceInfoByDataSourceId(dataSourceId, userId);
     }
 
     @Override

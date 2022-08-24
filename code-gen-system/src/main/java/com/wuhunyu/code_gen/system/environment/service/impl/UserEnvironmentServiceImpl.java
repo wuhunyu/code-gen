@@ -8,6 +8,8 @@ import com.wuhunyu.code_gen.common.utils.Assert;
 import com.wuhunyu.code_gen.system.base_class.constants.BaseClassConstant;
 import com.wuhunyu.code_gen.system.base_class.domain.dto.BaseClassVo;
 import com.wuhunyu.code_gen.system.base_class.service.BaseClassService;
+import com.wuhunyu.code_gen.system.data_source.basic.domain.dto.DataSourceInfoDto;
+import com.wuhunyu.code_gen.system.data_source.basic.service.DataSourceInfoService;
 import com.wuhunyu.code_gen.system.environment.domain.UserEnvironment;
 import com.wuhunyu.code_gen.system.environment.domain.dto.UserEnvironmentDto;
 import com.wuhunyu.code_gen.system.environment.domain.vo.UserEnvironmentVo;
@@ -47,6 +49,8 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
 
     private final BaseClassService baseClassService;
 
+    private final DataSourceInfoService dataSourceInfoService;
+
     private final ApplicationEventPublisher publisher;
 
     @Override
@@ -62,7 +66,8 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
                 codeGenConfigModel.getSubModuleName(),
                 codeGenConfigModel.getAuthor(),
                 codeGenConfigModel.getVersion(),
-                (long) BaseClassConstant.NON_BASE_CLASS_VALUE);
+                (long) BaseClassConstant.NON_BASE_CLASS_VALUE,
+                (long) CommonConstant.INVALID_NUM);
 
         // 新增 环境信息
         userEnvironmentRepository.insertUserEnvironment(userEnvironment, userId);
@@ -102,7 +107,8 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
                 userEnvironment.getSubModuleName(),
                 userEnvironment.getAuthor(),
                 userEnvironment.getVersion(),
-                this.findBaseClassId(userEnvironment.getBaseClassId(), userId));
+                this.findBaseClassId(userEnvironment.getBaseClassId(), userId),
+                userEnvironment.getDataSourceId());
     }
 
     @Override
@@ -121,7 +127,8 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
                 userEnvironment.getSubModuleName(),
                 userEnvironment.getAuthor(),
                 userEnvironment.getVersion(),
-                this.findBaseClassName(userEnvironment.getBaseClassId(), userId));
+                this.findBaseClassName(userEnvironment.getBaseClassId(), userId),
+                this.findConnectionName(userEnvironment.getBaseClassId(), userId));
     }
 
     /**
@@ -156,6 +163,23 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
         return baseClassVo == null ? BaseClassConstant.NON_BASE_CLASS_LABEL : baseClassVo.getBaseClassName();
     }
 
+    /**
+     * 获取数据源的连接名称
+     *
+     * @param dataSourceId 数据源id
+     * @param userId       用户id
+     * @return 连接名称
+     */
+    private String findConnectionName(Long dataSourceId, Long userId) {
+        if (dataSourceId == CommonConstant.INVALID_NUM) {
+            return CommonConstant.BLANK_STR;
+        }
+        // 获取 数据源信息
+        DataSourceInfoDto dataSourceInfoDto =
+                dataSourceInfoService.findDataSourceInfoDtoByDataSourceId(dataSourceId, userId);
+        return dataSourceInfoDto == null ? dataSourceInfoDto.getConnectionName() : dataSourceInfoDto.getConnectionName();
+    }
+
     @Override
     public void insertUserEnvironment(UserEnvironmentDto userEnvironmentDto, Long userId) {
         log.info("环境: {}", userEnvironmentDto);
@@ -171,7 +195,8 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
                 userEnvironmentDto.getSubModuleName(),
                 userEnvironmentDto.getAuthor(),
                 userEnvironmentDto.getVersion(),
-                userEnvironmentDto.getBaseClassId());
+                userEnvironmentDto.getBaseClassId(),
+                userEnvironmentDto.getDataSourceId());
         // 执行新增
         userEnvironmentRepository.insertUserEnvironment(userEnvironment, userId);
     }
@@ -195,7 +220,8 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
                 userEnvironmentDto.getSubModuleName(),
                 userEnvironmentDto.getAuthor(),
                 userEnvironmentDto.getVersion(),
-                userEnvironmentDto.getBaseClassId());
+                userEnvironmentDto.getBaseClassId(),
+                userEnvironmentDto.getDataSourceId());
         // 执行修改
         userEnvironmentRepository.updateUserEnvironment(userEnvironment, userId);
     }

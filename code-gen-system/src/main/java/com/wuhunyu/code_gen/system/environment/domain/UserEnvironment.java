@@ -62,4 +62,9 @@ public class UserEnvironment {
      */
     private Long baseClassId;
 
+    /**
+     * 数据源id
+     */
+    private Long dataSourceId;
+
 }
