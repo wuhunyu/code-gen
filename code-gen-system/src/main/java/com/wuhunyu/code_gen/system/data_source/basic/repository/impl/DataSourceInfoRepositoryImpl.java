@@ -37,7 +37,7 @@ import static com.wuhunyu.code_gen.common.constants.CommonConstant.*;
 public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
 
     @Override
-    public List<DataSourceInfo> pageDataSourceInfo(Long userId, DataSourceInfoQuery dataSourceInfoQuery) {
+    public List<DataSourceInfo> pageDataSourceInfo(Long useEnvironmentId, DataSourceInfoQuery dataSourceInfoQuery) {
         // 日期时间查询条件
         long startDatetime = dataSourceInfoQuery.getStartDatetime() == null ?
                 MIN_IN_VALID_DATE_TIME :
@@ -55,7 +55,7 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
 
         // 获取数据源id集合
         Set<ZSetOperations.TypedTuple<String>> typedTuples =
-                zRangeByScore(this.findDataSourceInfoSetKey(userId),
+                zRangeByScore(this.findDataSourceInfoSetKey(useEnvironmentId),
                         startDatetime,
                         endDatetime,
                         dataSourceInfoQuery.getStartPage() - 1L,
@@ -76,7 +76,7 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
     }
 
     @Override
-    public Long countDataSourceInfo(Long userId, LocalDateTime startDatetime, LocalDateTime endDatetime) {
+    public Long countDataSourceInfo(Long useEnvironmentId, LocalDateTime startDatetime, LocalDateTime endDatetime) {
         // 日期时间查询条件
         long startDatetimeVal = startDatetime == null ?
                 MIN_IN_VALID_DATE_TIME :
@@ -89,12 +89,12 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
                         .toInstant()
                         .toEpochMilli();
 
-        return countZSetByScore(this.findDataSourceInfoSetKey(userId), startDatetimeVal, endDatetimeVal);
+        return countZSetByScore(this.findDataSourceInfoSetKey(useEnvironmentId), startDatetimeVal, endDatetimeVal);
     }
 
     @Override
-    public List<DataSourceInfo> listDataSourceInfos(Long userId) {
-        Set<String> dataSourceIds = zRange(this.findDataSourceInfoSetKey(userId));
+    public List<DataSourceInfo> listDataSourceInfos(Long useEnvironmentId) {
+        Set<String> dataSourceIds = zRange(this.findDataSourceInfoSetKey(useEnvironmentId));
         if (CollUtil.isEmpty(dataSourceIds)) {
             return Collections.emptyList();
         }
@@ -105,8 +105,8 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
     }
 
     @Override
-    public DataSourceInfo findDataSourceInfoByDataSourceId(Long dataSourceId, Long userId) {
-        boolean exists = zExists(this.findDataSourceInfoSetKey(userId), dataSourceId.toString());
+    public DataSourceInfo findDataSourceInfoByDataSourceId(Long dataSourceId, Long useEnvironmentId) {
+        boolean exists = zExists(this.findDataSourceInfoSetKey(useEnvironmentId), dataSourceId.toString());
         if (!exists) {
             return null;
         }
@@ -114,25 +114,25 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
     }
 
     @Override
-    public void insertDataSourceInfo(DataSourceInfo dataSourceInfo, Long userId) {
+    public void insertDataSourceInfo(DataSourceInfo dataSourceInfo, Long useEnvironmentId) {
         // 新增 数据源信息
         hSet(this.findDataSourceInfoMapKey(dataSourceInfo.getDataSourceId()), dataSourceInfo);
         // 新增 用户&数据源关联
-        zAdd(this.findDataSourceInfoSetKey(userId), dataSourceInfo.getDataSourceId().toString());
+        zAdd(this.findDataSourceInfoSetKey(useEnvironmentId), dataSourceInfo.getDataSourceId().toString());
     }
 
     @Override
-    public void updateDataSourceInfo(DataSourceInfo dataSourceInfo, Long userId) {
+    public void updateDataSourceInfo(DataSourceInfo dataSourceInfo, Long useEnvironmentId) {
         // 更新 用户&数据源关联 的更新日期时间
-        zAdd(this.findDataSourceInfoSetKey(userId), dataSourceInfo.getDataSourceId().toString());
+        zAdd(this.findDataSourceInfoSetKey(useEnvironmentId), dataSourceInfo.getDataSourceId().toString());
         // 数据源信息
         hSet(this.findDataSourceInfoMapKey(dataSourceInfo.getDataSourceId()), dataSourceInfo);
     }
 
     @Override
-    public void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long userId) {
+    public void deleteDataSourceInfoByDataSourceId(Long dataSourceId, Long useEnvironmentId) {
         // 删除 用户&数据源关联
-        zRemove(this.findDataSourceInfoSetKey(userId), dataSourceId.toString());
+        zRemove(this.findDataSourceInfoSetKey(useEnvironmentId), dataSourceId.toString());
         // 删除 数据源信息
         delete(this.findDataSourceInfoMapKey(dataSourceId));
     }
@@ -140,11 +140,11 @@ public class DataSourceInfoRepositoryImpl implements DataSourceInfoRepository {
     /**
      * 查询 用户&数据源 关系key
      *
-     * @param userId 用户id
+     * @param useEnvironmentId 环境id
      * @return 用户&数据源 关系key
      */
-    private String findDataSourceInfoSetKey(Long userId) {
-        return DATA_SOURCE_SET + userId;
+    private String findDataSourceInfoSetKey(Long useEnvironmentId) {
+        return DATA_SOURCE_SET + useEnvironmentId;
     }
 
     /**

@@ -15,6 +15,9 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * 数据源工具类
@@ -127,11 +130,30 @@ public final class DataSourceUtil {
 
     /**
      * 手动关闭数据源
+     */
+    public static void closeDataSource() {
+        DynamicDataSourceContextHolder.poll();
+    }
+
+    /**
+     * 手动切换数据源
      *
      * @param dataSourceId 数据源id
+     * @param supplier     生产者
+     * @param <T>          返回结果泛型
+     * @return 返回结果
      */
-    public static void closeDataSource(Long dataSourceId) {
-        DynamicDataSourceContextHolder.poll();
+    public static <T> T handleDataSource(Long dataSourceId, Supplier<T> supplier) {
+        try {
+            // 手动切换数据源
+            DataSourceUtil.openDataSource(dataSourceId);
+
+            // 执行
+            return supplier.get();
+        } finally {
+            // 回退数据源
+            DataSourceUtil.closeDataSource();
+        }
     }
 
     /**

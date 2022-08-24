@@ -39,10 +39,10 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
     private final DataSourceInfoService dataSourceInfoService;
 
     @Override
-    public List<SelectData> listNewTables(Long dataSourceId, Long userId) {
+    public List<SelectData> listNewTables(Long dataSourceId, Long useEnvironmentId) {
         // 查询数据源信息
         DataSourceInfoDto dataSourceInfoDto =
-                dataSourceInfoService.findDataSourceInfoDtoByDataSourceId(dataSourceId, userId);
+                dataSourceInfoService.findDataSourceInfoDtoByDataSourceId(dataSourceId, useEnvironmentId);
         Assert.isTrue(dataSourceInfoDto == null, "数据源信息不存在");
 
         // 创建数据源连接
@@ -50,11 +50,7 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
             DataSourceUtil.addDataSource(dataSourceInfoDto);
         }
 
-        // TODO 修改为 lambda 表达式
-        try {
-            // 手动切换数据源
-            DataSourceUtil.openDataSource(dataSourceId);
-
+        return DataSourceUtil.handleDataSource(dataSourceId, () -> {
             // 查询当前数据库名称
             String curDataBaseName = dynamicDataSourceMapper.findCurDataBaseName();
             // 查询当前数据库下的所有表信息
@@ -68,23 +64,21 @@ public class DynamicDataSourceServiceImpl implements DynamicDataSourceService {
                             table.getTableName(),
                             table.getTableId().toString()))
                     .collect(Collectors.toList());
-        } finally {
-            DataSourceUtil.closeDataSource(dataSourceId);
-        }
+        });
     }
 
     @Override
-    public void importTableData(Long dataSourceId, Long userId) {
-
+    public void importTableData(Long dataSourceId, Long useEnvironmentId) {
+        //
     }
 
     @Override
-    public List<TableDataVo> pageTableDataVos(TableQuery tableQuery, Long userId) {
+    public List<TableDataVo> pageTableDataVos(TableQuery tableQuery, Long useEnvironmentId) {
         return null;
     }
 
     @Override
-    public Long countTableData(TableQuery tableQuery, Long userId) {
+    public Long countTableData(TableQuery tableQuery, Long useEnvironmentId) {
         return null;
     }
 }
