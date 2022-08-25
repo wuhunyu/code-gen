@@ -18,6 +18,11 @@ import javax.servlet.http.HttpSession;
 public class AuthContextHolder {
 
     /**
+     * 环境id
+     */
+    public static final String USE_ENVIRONMENT_ID = "useEnvironmentId";
+
+    /**
      * 获取当前用户id
      *
      * @return 用户id
@@ -29,6 +34,24 @@ public class AuthContextHolder {
         HttpServletRequest request = requestAttributes.getRequest();
         HttpSession session = request.getSession();
         Object userId = session.getAttribute(JwtUtil.USER_ID_STR);
+        if (userId == null) {
+            return null;
+        }
+        return Long.parseLong(userId.toString());
+    }
+
+    /**
+     * 获取当前用户的环境id
+     *
+     * @return 环境id
+     */
+    public static Long getUseEnvironmentId() {
+        // 获取session对象中的 用户id
+        ServletRequestAttributes requestAttributes =
+                (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        HttpServletRequest request = requestAttributes.getRequest();
+        HttpSession session = request.getSession();
+        Object userId = session.getAttribute(AuthContextHolder.USE_ENVIRONMENT_ID);
         if (userId == null) {
             return null;
         }

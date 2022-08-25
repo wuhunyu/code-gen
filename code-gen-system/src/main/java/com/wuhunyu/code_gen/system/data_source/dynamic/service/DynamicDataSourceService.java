@@ -19,19 +19,19 @@ public interface DynamicDataSourceService {
     /**
      * 查询指定数据源id下的所有表信息
      *
-     * @param dataSourceId     数据源id
      * @param useEnvironmentId 环境id
+     * @param userId           操作人id
      * @return 表信息
      */
-    List<SelectData> listNewTables(Long dataSourceId, Long useEnvironmentId);
+    List<SelectData> listNewTables(Long useEnvironmentId, Long userId);
 
     /**
      * 导入表数据
      *
-     * @param dataSourceId     数据源id
      * @param useEnvironmentId 环境id
+     * @param userId           操作人id
      */
-    void importTableData(Long dataSourceId, Long useEnvironmentId);
+    void importTableData(Long useEnvironmentId, Long userId);
 
     /**
      * 分页查询表数据

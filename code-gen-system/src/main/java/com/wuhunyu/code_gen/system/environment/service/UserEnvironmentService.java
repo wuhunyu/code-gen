@@ -81,4 +81,13 @@ public interface UserEnvironmentService {
      */
     void sortUserEnvironments(List<Long> userEnvironmentIds, Long userId);
 
+    /**
+     * 判断该用户名下是否具有该环境id
+     *
+     * @param userEnvironmentId 环境id
+     * @param userId            用户id
+     * @return 是否具有(true : 具有 ; false : 不具有)
+     */
+    boolean existsUserEnvironmentId(Long userEnvironmentId, Long userId);
+
 }

@@ -8,6 +8,7 @@ import com.wuhunyu.code_gen.common.utils.Assert;
 import com.wuhunyu.code_gen.system.base_class.constants.BaseClassConstant;
 import com.wuhunyu.code_gen.system.base_class.domain.dto.BaseClassVo;
 import com.wuhunyu.code_gen.system.base_class.service.BaseClassService;
+import com.wuhunyu.code_gen.system.data_source.basic.constant.DataSourceInfoConstant;
 import com.wuhunyu.code_gen.system.data_source.basic.domain.dto.DataSourceInfoDto;
 import com.wuhunyu.code_gen.system.data_source.basic.service.DataSourceInfoService;
 import com.wuhunyu.code_gen.system.environment.domain.UserEnvironment;
@@ -67,7 +68,7 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
                 codeGenConfigModel.getAuthor(),
                 codeGenConfigModel.getVersion(),
                 (long) BaseClassConstant.NON_BASE_CLASS_VALUE,
-                (long) CommonConstant.INVALID_NUM);
+                (long) DataSourceInfoConstant.NON_DATA_SOURCE_VALUE);
 
         // 新增 环境信息
         userEnvironmentRepository.insertUserEnvironment(userEnvironment, userId);
@@ -204,9 +205,7 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
     @Override
     public void updateUserEnvironment(UserEnvironmentDto userEnvironmentDto, Long userId) {
         // 查询环境是否已存在
-        boolean exists = userEnvironmentRepository
-                .existsUserEnvironmentByUserEnvironmentIdAndUserId(
-                        userEnvironmentDto.getUserEnvironmentId(), userId);
+        boolean exists = this.existsUserEnvironmentId(userEnvironmentDto.getUserEnvironmentId(), userId);
         Assert.isTrue(!exists, "环境不存在");
 
         // 构建 环境对象
@@ -229,8 +228,7 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
     @Override
     public void deleteUserEnvironment(Long userEnvironmentId, Long userId) {
         // 查询是否存在
-        boolean exists = userEnvironmentRepository
-                .existsUserEnvironmentByUserEnvironmentIdAndUserId(userEnvironmentId, userId);
+        boolean exists = this.existsUserEnvironmentId(userEnvironmentId, userId);
 
         // 查询当前的环境个数
         Long size = userEnvironmentRepository.countUserEnvironmentNumByUserId(userId);
@@ -263,5 +261,10 @@ public class UserEnvironmentServiceImpl implements UserEnvironmentService {
 
         // 重新排序
         userEnvironmentRepository.sortUserEnvironments(userEnvironmentIds, userId);
+    }
+
+    @Override
+    public boolean existsUserEnvironmentId(Long userEnvironmentId, Long userId) {
+        return userEnvironmentRepository.existsUserEnvironmentByUserEnvironmentIdAndUserId(userEnvironmentId, userId);
     }
 }

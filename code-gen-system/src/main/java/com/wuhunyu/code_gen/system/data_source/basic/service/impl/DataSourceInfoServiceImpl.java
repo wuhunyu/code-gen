@@ -3,6 +3,7 @@ package com.wuhunyu.code_gen.system.data_source.basic.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.wuhunyu.code_gen.common.domain.SelectData;
 import com.wuhunyu.code_gen.common.sequence.SequenceInstance;
+import com.wuhunyu.code_gen.system.data_source.basic.constant.DataSourceInfoConstant;
 import com.wuhunyu.code_gen.system.data_source.basic.domain.DataSourceInfo;
 import com.wuhunyu.code_gen.system.data_source.basic.domain.dto.DataSourceInfoDto;
 import com.wuhunyu.code_gen.system.data_source.basic.domain.query.DataSourceInfoQuery;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -67,15 +69,23 @@ public class DataSourceInfoServiceImpl implements DataSourceInfoService {
     @Override
     public List<SelectData> listDataSourceInfoForSelect(Long userId) {
         List<DataSourceInfo> dataSourceInfos = dataSourceInfoRepository.listDataSourceInfos(userId);
+
+        List<SelectData> list = new ArrayList<>(
+                (CollUtil.isEmpty(dataSourceInfos) ? 0 : dataSourceInfos.size()) + 1);
+        // 添加一个默认的数据源选项
+        list.add(new SelectData(
+                DataSourceInfoConstant.NON_DATA_SOURCE_LABEL,
+                String.valueOf(DataSourceInfoConstant.NON_DATA_SOURCE_VALUE)));
         if (CollUtil.isEmpty(dataSourceInfos)) {
-            return Collections.emptyList();
+            return list;
         }
 
-        return dataSourceInfos.stream()
-                .map(dataSourceInfo -> new SelectData(
-                        dataSourceInfo.getConnectionName(),
-                        dataSourceInfo.getDataSourceId().toString()))
-                .collect(Collectors.toList());
+        for (DataSourceInfo dataSourceInfo : dataSourceInfos) {
+            list.add(new SelectData(
+                    dataSourceInfo.getConnectionName(),
+                    dataSourceInfo.getDataSourceId().toString()));
+        }
+        return list;
     }
 
     @Override
